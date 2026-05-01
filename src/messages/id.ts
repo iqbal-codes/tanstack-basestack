@@ -55,6 +55,8 @@ const id: Messages = {
   breadcrumb: {
     dashboard: 'Dasbor',
     customers: 'Pelanggan',
+    createCustomer: 'Buat Pelanggan',
+    editCustomer: 'Edit Pelanggan',
     products: 'Produk',
     newProduct: 'Produk Baru',
     editProduct: 'Edit Produk',
@@ -110,6 +112,8 @@ const id: Messages = {
     inactive: 'Tidak Aktif',
     searchPlaceholder: 'Cari pelanggan...',
     noCustomers: 'Belum ada pelanggan',
+    noCustomersDesc:
+      'Tambah pelanggan pertama Anda untuk mulai mengelola pesanan.',
     noResults: 'Tidak ada pelanggan yang cocok',
     save: 'Simpan',
     saving: 'Menyimpan...',
@@ -143,6 +147,7 @@ const id: Messages = {
     searchPlaceholder: 'Cari produk...',
     noProducts: 'Belum ada produk',
     noProductsDesc: 'Buat produk pertama Anda untuk memulai katalog.',
+    noResults: 'Tidak ada produk yang cocok',
     createProduct: 'Buat Produk',
     updateProduct: 'Perbarui Produk',
     created: 'Produk berhasil dibuat',

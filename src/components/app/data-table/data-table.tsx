@@ -3,9 +3,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import type { LucideIcon } from 'lucide-react'
 import { AlertCircle, PackageOpen, RefreshCw, SearchX } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { EmptyState } from '#/components/app/page-shell/empty-state'
+import {
+  EmptyState,
+  type EmptyStateAction,
+} from '#/components/app/page-shell/empty-state'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
 import {
@@ -57,7 +61,15 @@ type DataTableProps<TData> = {
   tableId: string
   totalRows: number
   emptyState?: React.ReactNode
+  emptyIcon?: LucideIcon
+  emptyTitle?: string
+  emptyDescription?: string
+  emptyAction?: EmptyStateAction
   noResultsState?: React.ReactNode
+  noResultsIcon?: LucideIcon
+  noResultsTitle?: string
+  noResultsDescription?: string
+  noResultsAction?: EmptyStateAction
   hasActiveFilters?: boolean
   onClearFilters?: () => void
   onRowClick?: (row: TData) => void
@@ -87,7 +99,15 @@ export function DataTable<TData>({
   tableId,
   totalRows,
   emptyState,
+  emptyIcon,
+  emptyTitle,
+  emptyDescription,
+  emptyAction,
   noResultsState,
+  noResultsIcon,
+  noResultsTitle,
+  noResultsDescription,
+  noResultsAction,
   hasActiveFilters,
   onClearFilters,
   onRowClick,
@@ -186,6 +206,19 @@ export function DataTable<TData>({
     }
   }, [hasActiveFilters, page, perPage, sort, table])
 
+  const visibleEmptyColumns = useMemo(
+    () =>
+      allColumns.filter((col) => {
+        if ('accessorKey' in col || 'id' in col) {
+          const id = 'accessorKey' in col ? col.accessorKey : col.id
+          if (id === 'select') return false
+          return defaultVisibility[id as string] !== false
+        }
+        return false
+      }),
+    [allColumns, defaultVisibility],
+  )
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -267,12 +300,12 @@ export function DataTable<TData>({
 
   if (data.length === 0 && !hasActiveFilters) {
     return (
-      <div className="space-y-4">
-        <DataTableProvider
-          tableId={tableId}
-          totalRows={totalRows}
-          visibleRows={data}
-        >
+      <DataTableProvider
+        tableId={tableId}
+        totalRows={totalRows}
+        visibleRows={data}
+      >
+        <div className="space-y-4">
           <DataTableToolbar
             toolbarStart={toolbarStart}
             toolbarEnd={
@@ -294,26 +327,73 @@ export function DataTable<TData>({
             }
             slotContext={slotContext}
           />
-        </DataTableProvider>
-        {emptyState || (
-          <EmptyState
-            icon={PackageOpen}
-            title={labels.loading}
-            description=""
-          />
-        )}
-      </div>
+          <div className="rounded-xl border bg-muted/50 p-1.5">
+            <div className="rounded-lg border bg-background">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50 *:px-3 sm:*:px-4">
+                    {visibleEmptyColumns.map((col) => {
+                      if ('accessorKey' in col || 'id' in col) {
+                        const id =
+                          'accessorKey' in col ? col.accessorKey : col.id
+                        const meta = col.meta as AppColumnMeta | undefined
+                        return (
+                          <TableHead
+                            key={id as string}
+                            className={cn(
+                              meta?.align === 'end' && 'text-right',
+                              meta?.align === 'center' && 'text-center',
+                              meta?.headerClassName,
+                            )}
+                          >
+                            {meta?.label || (id as string)}
+                          </TableHead>
+                        )
+                      }
+                      return null
+                    })}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                      colSpan={visibleEmptyColumns.length}
+                      className="text-center"
+                    >
+                      {emptyState ??
+                        (emptyTitle ? (
+                          <EmptyState
+                            icon={emptyIcon ?? PackageOpen}
+                            title={emptyTitle}
+                            description={emptyDescription ?? ''}
+                            action={emptyAction}
+                          />
+                        ) : (
+                          <EmptyState
+                            icon={PackageOpen}
+                            title={labels.loading}
+                            description=""
+                          />
+                        ))}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </div>
+      </DataTableProvider>
     )
   }
 
   if (data.length === 0 && hasActiveFilters) {
     return (
-      <div className="space-y-4">
-        <DataTableProvider
-          tableId={tableId}
-          totalRows={totalRows}
-          visibleRows={data}
-        >
+      <DataTableProvider
+        tableId={tableId}
+        totalRows={totalRows}
+        visibleRows={data}
+      >
+        <div className="space-y-4">
           <DataTableToolbar
             toolbarStart={toolbarStart}
             toolbarEnd={
@@ -335,25 +415,74 @@ export function DataTable<TData>({
             }
             slotContext={slotContext}
           />
-        </DataTableProvider>
-        {noResultsState || (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="rounded-full bg-muted p-4">
-              <SearchX className="size-8 text-muted-foreground" />
+          <div className="rounded-xl border bg-muted/50 p-1.5">
+            <div className="rounded-lg border bg-background">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50 *:px-3 sm:*:px-4">
+                    {visibleEmptyColumns.map((col) => {
+                      if ('accessorKey' in col || 'id' in col) {
+                        const id =
+                          'accessorKey' in col ? col.accessorKey : col.id
+                        const meta = col.meta as AppColumnMeta | undefined
+                        return (
+                          <TableHead
+                            key={id as string}
+                            className={cn(
+                              meta?.align === 'end' && 'text-right',
+                              meta?.align === 'center' && 'text-center',
+                              meta?.headerClassName,
+                            )}
+                          >
+                            {meta?.label || (id as string)}
+                          </TableHead>
+                        )
+                      }
+                      return null
+                    })}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                      colSpan={visibleEmptyColumns.length}
+                      className="text-center"
+                    >
+                      {noResultsState ??
+                        (noResultsTitle ? (
+                          <EmptyState
+                            icon={noResultsIcon ?? SearchX}
+                            title={noResultsTitle}
+                            description={noResultsDescription ?? ''}
+                            action={noResultsAction}
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center justify-center py-12 text-center">
+                            <div className="rounded-full bg-muted p-4">
+                              <SearchX className="size-8 text-muted-foreground" />
+                            </div>
+                            <h3 className="mt-4 font-semibold">
+                              {labels.loading}
+                            </h3>
+                            {onClearFilters && (
+                              <Button
+                                variant="outline"
+                                className="mt-4"
+                                onClick={onClearFilters}
+                              >
+                                {labels.clearFilters}
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
-            <h3 className="mt-4 font-semibold">{labels.loading}</h3>
-            {onClearFilters && (
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={onClearFilters}
-              >
-                {labels.clearFilters}
-              </Button>
-            )}
           </div>
-        )}
-      </div>
+        </div>
+      </DataTableProvider>
     )
   }
 

@@ -1,5 +1,6 @@
 import {
   createFileRoute,
+  Link,
   Outlet,
   redirect,
   useRouterState,
@@ -7,6 +8,7 @@ import {
 import { useTranslations } from 'use-intl'
 import { Breadcrumbs } from '#/components/app/page-shell/breadcrumbs'
 import { AppSidebar } from '#/components/app-sidebar'
+import { Button } from '#/components/ui/button'
 import { Separator } from '#/components/ui/separator'
 import {
   SidebarInset,
@@ -50,21 +52,31 @@ function OrgLayout() {
   const pageTitleKey = (
     leafMatch?.context as unknown as Record<string, unknown>
   )?.pageTitle as string | undefined
+  const primaryAction = (
+    leafMatch?.context as unknown as Record<string, unknown>
+  )?.primaryAction as { label: string; href: string } | undefined
 
   return (
     <SidebarProvider>
       <AppSidebar user={user} org={org} />
       <SidebarInset>
         <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-6!" />
-            <Breadcrumbs />
-          </div>
-          <div className="md:hidden ml-auto flex items-center gap-2">
-            <span className="text-sm font-medium truncate max-w-32">
+            <span className="md:hidden text-base font-medium truncate">
               {pageTitleKey ? bt(pageTitleKey) : null}
             </span>
+            <div className="hidden md:flex items-center gap-2">
+              <Breadcrumbs />
+            </div>
+          </div>
+          <div className="md:hidden ml-auto flex items-center gap-2">
+            {primaryAction && (
+              <Button size="sm" asChild>
+                <Link to={primaryAction.href}>{bt(primaryAction.label)}</Link>
+              </Button>
+            )}
           </div>
         </header>
         <Outlet />

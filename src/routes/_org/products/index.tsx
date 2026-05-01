@@ -1,32 +1,125 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Package } from 'lucide-react'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useTranslations } from 'use-intl'
-import { EmptyState } from '#/components/app/page-shell/empty-state'
+import type { AppColumnDef, DataTableLabels } from '#/components/app/data-table'
+import { DataTable, DataTableSearch } from '#/components/app/data-table'
 import { PageContent } from '#/components/app/page-shell/page-content'
 import { PageHeader } from '#/components/app/page-shell/page-header'
+import { Badge } from '#/components/ui/badge'
+import {
+  type ListProductsResult,
+  listProductsFn,
+} from '#/features/products/server'
+
+type ProductSearch = { q?: string }
 
 export const Route = createFileRoute('/_org/products/')({
+  validateSearch: (search: Record<string, unknown>): ProductSearch => ({
+    q: typeof search.q === 'string' ? search.q : undefined,
+  }),
   beforeLoad: () => ({
     breadcrumb: 'products',
     pageTitle: 'products',
+    primaryAction: { label: 'createProduct', href: '/products/new' },
   }),
-  component: ProductsPage,
+  loaderDeps: ({ search: { q } }) => ({ q }),
+  loader: async ({ context, deps }) => {
+    const ctx = context as { org: { id: string } }
+    const result = await listProductsFn({
+      data: { orgId: ctx.org.id, search: deps.q },
+    })
+    return result
+  },
+  component: ProductsList,
 })
 
-function ProductsPage() {
+function ProductsList() {
+  const { rows, totalRows } = Route.useLoaderData()
+  const [search, setSearch] = useQueryState('q', parseAsString.withDefault(''))
   const t = useTranslations('products')
+  const dt = useTranslations('dataTable')
+  const st = useTranslations('status')
+
+  const columns: AppColumnDef<ListProductsResult['rows'][number]>[] = [
+    {
+      accessorKey: 'name',
+      header: t('name'),
+      meta: { label: t('name'), mobileRole: 'title' },
+    },
+    {
+      accessorKey: 'description',
+      header: t('description'),
+      meta: { label: t('description'), mobileRole: 'meta' },
+      cell: ({ row }) => row.original.description ?? '—',
+    },
+    {
+      accessorKey: 'active',
+      header: t('active'),
+      meta: { label: st('active'), mobileRole: 'badge' },
+      cell: ({ row }) => (
+        <Badge variant={row.original.active ? 'default' : 'secondary'}>
+          {row.original.active ? st('active') : st('inactive')}
+        </Badge>
+      ),
+    },
+  ]
+
+  const labels: DataTableLabels = {
+    clearFilters: dt('clearFilters'),
+    columnVisibility: dt('columnVisibility'),
+    errorRetry: dt('errorRetry'),
+    errorTitle: dt('errorTitle'),
+    firstPage: dt('firstPage'),
+    lastPage: dt('lastPage'),
+    loading: dt('loading'),
+    nextPage: dt('nextPage'),
+    of: dt('of'),
+    page: dt('page'),
+    perPage: dt('perPage'),
+    previousPage: dt('previousPage'),
+    resetColumns: dt('resetColumns'),
+    rowsSelected: () => '',
+    visibleRows: () => '',
+  }
 
   return (
     <PageContent>
       <PageHeader
         title={t('title')}
-        primaryAction={{ label: t('createProduct'), href: '/products/new' }}
+        primaryAction={{
+          label: t('createProduct'),
+          href: '/products/new',
+        }}
       />
-      <EmptyState
-        icon={Package}
-        title={t('noProducts')}
-        description={t('noProductsDesc')}
-        action={{ label: t('createProduct'), href: '/products/new' }}
+      <DataTable
+        columns={columns}
+        data={rows}
+        getRowId={(row) => row.id}
+        isLoading={false}
+        labels={labels}
+        onPageChange={() => {}}
+        onPerPageChange={() => {}}
+        page={1}
+        perPage={25}
+        tableId="products"
+        totalRows={totalRows}
+        toolbarStart={
+          <DataTableSearch
+            placeholder={t('searchPlaceholder')}
+            value={search}
+            onChange={(v) => setSearch(v || null)}
+          />
+        }
+        emptyIcon={Package}
+        emptyTitle={t('noProducts')}
+        emptyDescription={t('noProductsDesc')}
+        emptyAction={{ label: t('createProduct'), href: '/products/new' }}
+        noResultsTitle={t('noResults')}
+        noResultsDescription={t('noProductsDesc')}
+        noResultsAction={{ label: t('createProduct'), href: '/products/new' }}
+        hasActiveFilters={!!search}
+        onClearFilters={() => setSearch(null)}
       />
     </PageContent>
   )

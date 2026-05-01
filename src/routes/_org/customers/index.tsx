@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Users } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useTranslations } from 'use-intl'
 import type { AppColumnDef, DataTableLabels } from '#/components/app/data-table'
@@ -17,6 +18,7 @@ export const Route = createFileRoute('/_org/customers/')({
   beforeLoad: () => ({
     breadcrumb: 'customers',
     pageTitle: 'customers',
+    primaryAction: { label: 'createCustomer', href: '/customers/new' },
   }),
   loaderDeps: ({ search: { q } }) => ({ q }),
   loader: async ({ context, deps }) => {
@@ -110,16 +112,13 @@ function CustomersList() {
             onChange={(v) => setSearch(v || null)}
           />
         }
-        emptyState={
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <h3 className="font-semibold">{t('noCustomers')}</h3>
-          </div>
-        }
-        noResultsState={
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <h3 className="font-semibold">{t('noResults')}</h3>
-          </div>
-        }
+        emptyIcon={Users}
+        emptyTitle={t('noCustomers')}
+        emptyDescription={t('noCustomersDesc')}
+        emptyAction={{ label: t('createCustomer'), href: '/customers/new' }}
+        noResultsTitle={t('noResults')}
+        noResultsDescription={t('noCustomersDesc')}
+        noResultsAction={{ label: t('createCustomer'), href: '/customers/new' }}
         hasActiveFilters={!!search}
         onClearFilters={() => setSearch(null)}
       />

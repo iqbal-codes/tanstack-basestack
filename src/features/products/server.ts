@@ -1,14 +1,28 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
+import { and, desc, eq, ilike, type SQL, sql } from 'drizzle-orm'
+import { db } from '#/db/index'
+import { products as productsTable } from '#/db/schema'
 import {
   type CreateProductInput,
   createProduct,
   getProduct,
-  listProducts,
   type Product,
   type UpdateProductInput,
   updateProduct,
 } from './model'
+
+export type ProductRow = {
+  id: string
+  name: string
+  description: string | null
+  active: boolean
+}
+
+export type ListProductsResult = {
+  rows: ProductRow[]
+  totalRows: number
+}
 
 async function resolveOrgId(): Promise<string> {
   const { auth } = await import('#/lib/auth')
@@ -29,12 +43,39 @@ async function resolveOrgId(): Promise<string> {
   return memberships[0].orgId
 }
 
-export const listProductsFn = createServerFn({ method: 'GET' }).handler(
-  async (): Promise<Product[]> => {
-    const orgId = await resolveOrgId()
-    return listProducts({ orgId })
-  },
-)
+export const listProductsFn = createServerFn({ method: 'GET' })
+  .inputValidator((data: { orgId: string; search?: string }) => data)
+  .handler(async ({ data }): Promise<ListProductsResult> => {
+    const conditions: SQL[] = [eq(productsTable.orgId, data.orgId)]
+
+    if (data.search?.trim()) {
+      const pattern = `%${data.search.trim()}%`
+      conditions.push(ilike(productsTable.name, pattern) as SQL)
+    }
+
+    const allConditions = and(...conditions) as SQL
+
+    const rows = await db
+      .select({
+        id: productsTable.id,
+        name: productsTable.name,
+        description: productsTable.description,
+        active: productsTable.active,
+      })
+      .from(productsTable)
+      .where(allConditions)
+      .orderBy(desc(productsTable.createdAt))
+
+    const countResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(productsTable)
+      .where(allConditions)
+
+    return {
+      rows,
+      totalRows: Number(countResult[0]?.count ?? 0),
+    }
+  })
 
 export const getProductFn = createServerFn({ method: 'GET' })
   .inputValidator((input: { id: string }) => input)

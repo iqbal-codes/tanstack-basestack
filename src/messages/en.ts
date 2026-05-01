@@ -52,6 +52,8 @@ export type Messages = {
   breadcrumb: {
     dashboard: string
     customers: string
+    createCustomer: string
+    editCustomer: string
     products: string
     newProduct: string
     editProduct: string
@@ -107,6 +109,7 @@ export type Messages = {
     inactive: string
     searchPlaceholder: string
     noCustomers: string
+    noCustomersDesc: string
     noResults: string
     save: string
     saving: string
@@ -140,6 +143,7 @@ export type Messages = {
     searchPlaceholder: string
     noProducts: string
     noProductsDesc: string
+    noResults: string
     createProduct: string
     updateProduct: string
     created: string
@@ -221,6 +225,8 @@ const en: Messages = {
   breadcrumb: {
     dashboard: 'Dashboard',
     customers: 'Customers',
+    createCustomer: 'Create Customer',
+    editCustomer: 'Edit Customer',
     products: 'Products',
     newProduct: 'New Product',
     editProduct: 'Edit Product',
@@ -276,6 +282,7 @@ const en: Messages = {
     inactive: 'Inactive',
     searchPlaceholder: 'Search customers...',
     noCustomers: 'No customers yet',
+    noCustomersDesc: 'Add your first customer to start managing orders.',
     noResults: 'No customers match your search',
     save: 'Save',
     saving: 'Saving...',
@@ -309,6 +316,7 @@ const en: Messages = {
     searchPlaceholder: 'Search products...',
     noProducts: 'No products yet',
     noProductsDesc: 'Create your first product to start building your catalog.',
+    noResults: 'No products match your search',
     createProduct: 'Create Product',
     updateProduct: 'Update Product',
     created: 'Product created successfully',

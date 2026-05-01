@@ -113,6 +113,17 @@ describe('DataTable - empty state', () => {
     renderTable({ data: [], totalRows: 0 })
     expect(screen.getByText('Loading')).toBeDefined()
   })
+
+  it('shows custom empty state from structured props', () => {
+    renderTable({
+      data: [],
+      totalRows: 0,
+      emptyTitle: 'No items',
+      emptyDescription: 'Add your first item.',
+    })
+    expect(screen.getByText('No items')).toBeDefined()
+    expect(screen.getByText('Add your first item.')).toBeDefined()
+  })
 })
 
 describe('DataTable - no results state', () => {

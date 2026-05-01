@@ -72,11 +72,6 @@ function CreateCustomer() {
             </form.AppField>
           </FormGrid>
         </FormSection>
-        <FormActions>
-          <form.AppForm>
-            <form.SubmitButton>{t('save')}</form.SubmitButton>
-          </form.AppForm>
-        </FormActions>
       </FormRoot>
     </PageContent>
   )

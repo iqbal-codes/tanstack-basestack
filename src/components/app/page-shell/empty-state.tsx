@@ -3,7 +3,7 @@ import type { LucideIcon } from 'lucide-react'
 import { PackageOpen } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 
-type EmptyStateAction = {
+export type EmptyStateAction = {
   label: string
   href?: string
   onClick?: () => void
