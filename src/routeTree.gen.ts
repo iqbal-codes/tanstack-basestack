@@ -14,8 +14,10 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OrgRouteImport } from './routes/_org'
 import { Route as OrgIndexRouteImport } from './routes/_org/index'
+import { Route as OrgProductsIndexRouteImport } from './routes/_org/products/index'
 import { Route as OrgCustomersIndexRouteImport } from './routes/_org/customers/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as OrgProductsNewRouteImport } from './routes/_org/products/new'
 import { Route as OrgCustomersNewRouteImport } from './routes/_org/customers/new'
 import { Route as OrgCustomersIdEditRouteImport } from './routes/_org/customers/$id/edit'
 
@@ -43,6 +45,11 @@ const OrgIndexRoute = OrgIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OrgRoute,
 } as any)
+const OrgProductsIndexRoute = OrgProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => OrgRoute,
+} as any)
 const OrgCustomersIndexRoute = OrgCustomersIndexRouteImport.update({
   id: '/customers/',
   path: '/customers/',
@@ -52,6 +59,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OrgProductsNewRoute = OrgProductsNewRouteImport.update({
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => OrgRoute,
 } as any)
 const OrgCustomersNewRoute = OrgCustomersNewRouteImport.update({
   id: '/customers/new',
@@ -70,8 +82,10 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/customers/new': typeof OrgCustomersNewRoute
+  '/products/new': typeof OrgProductsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/customers/': typeof OrgCustomersIndexRoute
+  '/products/': typeof OrgProductsIndexRoute
   '/customers/$id/edit': typeof OrgCustomersIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -80,8 +94,10 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpRoute
   '/': typeof OrgIndexRoute
   '/customers/new': typeof OrgCustomersNewRoute
+  '/products/new': typeof OrgProductsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/customers': typeof OrgCustomersIndexRoute
+  '/products': typeof OrgProductsIndexRoute
   '/customers/$id/edit': typeof OrgCustomersIdEditRoute
 }
 export interface FileRoutesById {
@@ -92,8 +108,10 @@ export interface FileRoutesById {
   '/sign-up': typeof SignUpRoute
   '/_org/': typeof OrgIndexRoute
   '/_org/customers/new': typeof OrgCustomersNewRoute
+  '/_org/products/new': typeof OrgProductsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_org/customers/': typeof OrgCustomersIndexRoute
+  '/_org/products/': typeof OrgProductsIndexRoute
   '/_org/customers/$id/edit': typeof OrgCustomersIdEditRoute
 }
 export interface FileRouteTypes {
@@ -104,8 +122,10 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/customers/new'
+    | '/products/new'
     | '/api/auth/$'
     | '/customers/'
+    | '/products/'
     | '/customers/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -114,8 +134,10 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/'
     | '/customers/new'
+    | '/products/new'
     | '/api/auth/$'
     | '/customers'
+    | '/products'
     | '/customers/$id/edit'
   id:
     | '__root__'
@@ -125,8 +147,10 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/_org/'
     | '/_org/customers/new'
+    | '/_org/products/new'
     | '/api/auth/$'
     | '/_org/customers/'
+    | '/_org/products/'
     | '/_org/customers/$id/edit'
   fileRoutesById: FileRoutesById
 }
@@ -175,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgIndexRouteImport
       parentRoute: typeof OrgRoute
     }
+    '/_org/products/': {
+      id: '/_org/products/'
+      path: '/products'
+      fullPath: '/products/'
+      preLoaderRoute: typeof OrgProductsIndexRouteImport
+      parentRoute: typeof OrgRoute
+    }
     '/_org/customers/': {
       id: '/_org/customers/'
       path: '/customers'
@@ -188,6 +219,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_org/products/new': {
+      id: '/_org/products/new'
+      path: '/products/new'
+      fullPath: '/products/new'
+      preLoaderRoute: typeof OrgProductsNewRouteImport
+      parentRoute: typeof OrgRoute
     }
     '/_org/customers/new': {
       id: '/_org/customers/new'
@@ -209,14 +247,18 @@ declare module '@tanstack/react-router' {
 interface OrgRouteChildren {
   OrgIndexRoute: typeof OrgIndexRoute
   OrgCustomersNewRoute: typeof OrgCustomersNewRoute
+  OrgProductsNewRoute: typeof OrgProductsNewRoute
   OrgCustomersIndexRoute: typeof OrgCustomersIndexRoute
+  OrgProductsIndexRoute: typeof OrgProductsIndexRoute
   OrgCustomersIdEditRoute: typeof OrgCustomersIdEditRoute
 }
 
 const OrgRouteChildren: OrgRouteChildren = {
   OrgIndexRoute: OrgIndexRoute,
   OrgCustomersNewRoute: OrgCustomersNewRoute,
+  OrgProductsNewRoute: OrgProductsNewRoute,
   OrgCustomersIndexRoute: OrgCustomersIndexRoute,
+  OrgProductsIndexRoute: OrgProductsIndexRoute,
   OrgCustomersIdEditRoute: OrgCustomersIdEditRoute,
 }
 

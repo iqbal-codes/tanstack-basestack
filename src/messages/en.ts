@@ -52,6 +52,9 @@ export type Messages = {
   breadcrumb: {
     dashboard: string
     customers: string
+    products: string
+    newProduct: string
+    editProduct: string
   }
   status: {
     draft: string
@@ -122,6 +125,45 @@ export type Messages = {
     invoices: string
     invoicesDesc: string
   }
+  products: {
+    title: string
+    createTitle: string
+    editTitle: string
+    name: string
+    namePlaceholder: string
+    description: string
+    descriptionPlaceholder: string
+    productionNotes: string
+    productionNotesPlaceholder: string
+    active: string
+    inactive: string
+    searchPlaceholder: string
+    noProducts: string
+    noProductsDesc: string
+    createProduct: string
+    updateProduct: string
+    created: string
+    updated: string
+    deleted: string
+    deleteConfirm: string
+    variant: {
+      title: string
+      name: string
+      namePlaceholder: string
+      add: string
+      noVariants: string
+      attributes: string
+    }
+    pricing: {
+      title: string
+      breakpoints: string
+      unitPrice: string
+      minQuantity: string
+      addBreakpoint: string
+      noBreakpoints: string
+      preview: string
+    }
+  }
 }
 
 const en: Messages = {
@@ -179,6 +221,9 @@ const en: Messages = {
   breadcrumb: {
     dashboard: 'Dashboard',
     customers: 'Customers',
+    products: 'Products',
+    newProduct: 'New Product',
+    editProduct: 'Edit Product',
   },
   status: {
     draft: 'Draft',
@@ -248,6 +293,45 @@ const en: Messages = {
     productsDesc: 'Products in your catalog',
     invoices: 'Invoices',
     invoicesDesc: 'Outstanding invoices',
+  },
+  products: {
+    title: 'Products',
+    createTitle: 'New Product',
+    editTitle: 'Edit Product',
+    name: 'Product Name',
+    namePlaceholder: 'e.g. Custom T-Shirt',
+    description: 'Description',
+    descriptionPlaceholder: 'Describe the product',
+    productionNotes: 'Production Notes',
+    productionNotesPlaceholder: 'Special instructions for production',
+    active: 'Active',
+    inactive: 'Inactive',
+    searchPlaceholder: 'Search products...',
+    noProducts: 'No products yet',
+    noProductsDesc: 'Create your first product to start building your catalog.',
+    createProduct: 'Create Product',
+    updateProduct: 'Update Product',
+    created: 'Product created successfully',
+    updated: 'Product updated successfully',
+    deleted: 'Product deleted',
+    deleteConfirm: 'Are you sure you want to delete this product?',
+    variant: {
+      title: 'Variants',
+      name: 'Variant Name',
+      namePlaceholder: 'e.g. Large',
+      add: 'Add Variant',
+      noVariants: 'No variants configured',
+      attributes: 'Attributes',
+    },
+    pricing: {
+      title: 'Pricing',
+      breakpoints: 'Pricing Breakpoints',
+      unitPrice: 'Unit Price',
+      minQuantity: 'Min. Quantity',
+      addBreakpoint: 'Add Breakpoint',
+      noBreakpoints: 'No pricing breakpoints configured',
+      preview: 'Pricing Preview',
+    },
   },
 }
 
