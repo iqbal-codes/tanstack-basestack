@@ -67,4 +67,131 @@ export const ddl = [
     inviter_id TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     created_at TIMESTAMP NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS "customers" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    business_name TEXT,
+    email TEXT,
+    phone TEXT,
+    address TEXT,
+    notes TEXT,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "products" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    production_notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "product_variants" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    product_id TEXT NOT NULL REFERENCES "products"(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    attributes TEXT DEFAULT '{}',
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "pricing_breakpoints" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    product_id TEXT NOT NULL REFERENCES "products"(id) ON DELETE CASCADE,
+    variant_id TEXT REFERENCES "product_variants"(id) ON DELETE SET NULL,
+    min_quantity INTEGER NOT NULL DEFAULT 1,
+    unit_price REAL NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "orders" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    customer_id TEXT NOT NULL REFERENCES "customers"(id) ON DELETE RESTRICT,
+    status TEXT NOT NULL DEFAULT 'draft',
+    notes TEXT,
+    total REAL NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "order_line_items" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    order_id TEXT NOT NULL REFERENCES "orders"(id) ON DELETE CASCADE,
+    product_id TEXT NOT NULL REFERENCES "products"(id) ON DELETE RESTRICT,
+    variant_id TEXT REFERENCES "product_variants"(id) ON DELETE SET NULL,
+    quantity INTEGER NOT NULL DEFAULT 1,
+    unit_price REAL NOT NULL,
+    total REAL NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "customer_tokens" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    order_id TEXT NOT NULL REFERENCES "orders"(id) ON DELETE CASCADE,
+    token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    scope TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "invoices" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    order_id TEXT NOT NULL REFERENCES "orders"(id) ON DELETE RESTRICT,
+    total REAL NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    due_date TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "payments" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    invoice_id TEXT NOT NULL REFERENCES "invoices"(id) ON DELETE CASCADE,
+    amount REAL NOT NULL,
+    payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reference TEXT,
+    method TEXT NOT NULL DEFAULT 'bank_transfer',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "workflow_stages" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    order_index INTEGER NOT NULL DEFAULT 0,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "production_tasks" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    order_id TEXT NOT NULL REFERENCES "orders"(id) ON DELETE CASCADE,
+    stage_id TEXT NOT NULL REFERENCES "workflow_stages"(id) ON DELETE RESTRICT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    context TEXT DEFAULT '{}',
+    assigned_to TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "activity_events" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    actor_id TEXT NOT NULL,
+    target_type TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    details TEXT DEFAULT '{}',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
 ]

@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-router'
 import { Breadcrumbs } from '#/components/app/page-shell/breadcrumbs'
 import { AppSidebar } from '#/components/app-sidebar'
+import { Separator } from '#/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
@@ -13,7 +14,6 @@ import {
 } from '#/components/ui/sidebar'
 import { listUserOrgs } from '#/features/auth/org'
 import { getCurrentSession } from '#/lib/auth-session'
-import { Separator } from '#/components/ui/separator'
 
 export const Route = createFileRoute('/_org')({
   beforeLoad: async ({ location }) => {

@@ -64,20 +64,6 @@ const member = ac.newRole({
   settings: ['read'],
 })
 
-const operator = ac.newRole({
-  organization: [],
-  member: [],
-  invitation: [],
-  team: [],
-  ac: [],
-  customer: ['read'],
-  order: ['read'],
-  product: ['read'],
-  invoice: [],
-  production: ['read', 'update'],
-  settings: [],
-})
-
 const cookieDomain =
   process.env.COOKIE_DOMAIN ||
   (process.env.NODE_ENV === 'production' ? '.pabriq.com' : '.localhost')
@@ -99,7 +85,6 @@ export const auth = betterAuth({
         owner,
         admin,
         member,
-        operator,
       },
       async sendInvitationEmail(data) {
         const link = `${process.env.BETTER_AUTH_URL}/invite/accept?invitationId=${data.id}`
