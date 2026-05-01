@@ -1,10 +1,11 @@
 <!-- intent-skills:start -->
 ## Skill Loading
 
-Before work: run `npx @tanstack/intent@latest list` or use skills in context.
-Match: load with `npx @tanstack/intent@latest load <package>#<skill>` and follow `SKILL.md`.
-Monorepos: run from workspace root, prefer local skill for package being changed.
-Multiple matches: use most specific local skill; load extra only when task spans packages.
+Before substantial work:
+- Skill check: run `npx @tanstack/intent@latest list`, or use skills already listed in context.
+- Skill guidance: if one local skill clearly matches the task, run `npx @tanstack/intent@latest load <package>#<skill>` and follow the returned `SKILL.md`.
+- Monorepos: when working across packages, run the skill check from the workspace root and prefer the local skill for the package being changed.
+- Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
 <!-- intent-skills:end -->
 
 ## Durable Project Context
@@ -28,7 +29,7 @@ npx @tanstack/intent@latest list
 
 - Runtime: TanStack Start + React 19 + Vite + file-based TanStack Router
 - Package manager: bun — use `bun install`, `bun run dev`, `bun run build`, `bun run check`
-- Toolchain: Biome via `biome.json` and `bun run check`
+- Toolchain: Biome via `biome.json` and `bun run check`, plus `bun run typecheck` (tsc --noEmit)
 - UI: Tailwind CSS v4, shadcn, lucide, SaaS dashboard
 - Data fetching: TanStack Query calls Start server function in `src/features/dashboard/model.ts`
 - Routing: nested routes under `src/routes/app*` for overview, billing, settings
@@ -103,6 +104,9 @@ Single-context: `CONTEXT.md` + `docs/adr/` at repo root. See `docs/agents/domain
 
 ## Constraints
 
+- **Always run lint + typecheck before committing** — `bun run check` (Biome) + `bun run typecheck` (tsc --noEmit) must both pass. Build verification (`bun run build`) is encouraged for server-function-level errors.
+- **Never use `any`, `unknown`, or `never` types** — always use proper TypeScript types. If the correct type is unclear, research the library's API or define an explicit interface instead of escaping the type system.
+- **When unsure about a library API, type signature, or best practice, always use web search or Context7 documentation query first** — never guess or use workarounds like `as any`. The correct approach exists in the docs.
 - **Always use TanStack Form + shadcn Field components** — never raw `useState` for form field state. Use `useForm` from `@tanstack/react-form`, wrap fields with `Field`/`FieldLabel`/`FieldInput`/`FieldError` from `#/components/ui/field`.
 - **Always use nuqs for URL search params** — never raw `useSearchParams` or manual URL parsing. Import `useQueryState`/`parseAsString` etc. from `nuqs`.
 - **Always use createServerFn for internal API requests** — never raw `fetch` for internal backend calls. Define server functions in feature modules with `createServerFn` from `@tanstack/react-start`.
