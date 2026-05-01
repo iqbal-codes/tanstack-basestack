@@ -14,17 +14,16 @@
       "enabled": true
     }
   },
-  "watcher": {
-    "ignore": [
-      ".git/**",
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-      "coverage/**",
-      ".next/**",
-      ".turbo/**"
-    ]
-  },
+  "instructions": [
+    "AGENTS.md", 
+    "docs/agents/rules/typescript.md",
+    "docs/agents/rules/ui.md",
+    "docs/agents/rules/i18n.md",
+    "docs/agents/rules/server-functions.md",
+    "docs/agents/rules/database.md",
+    "docs/agents/rules/auth.md",
+    "docs/agents/rules/verification.md"
+  ],
   "compaction": {
     "auto": true,
     "prune": true,

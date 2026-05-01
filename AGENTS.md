@@ -1,94 +1,86 @@
-<!-- intent-skills:start -->
-## Skill Loading
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
-Before substantial work:
-- Skill check: run `npx @tanstack/intent@latest list`, or use skills already listed in context.
-- Skill guidance: if one local skill clearly matches the task, run `npx @tanstack/intent@latest load <package>#<skill>` and follow the returned `SKILL.md`.
-- Monorepos: when working across packages, run the skill check from the workspace root and prefer the local skill for the package being changed.
-- Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
-<!-- intent-skills:end -->
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-## Durable Project Context
+## 1. Think Before Coding
 
-Scaffold command:
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-```bash
-npx @tanstack/cli@latest create my-tanstack-app --agent --add-ons neon,form,sentry,shadcn,tanstack-query,better-auth,drizzle
+Before implementing:
+
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
 ```
 
-Follow-up commands:
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-```bash
-npx @tanstack/intent@latest install
-npx @tanstack/intent@latest list
-```
+---
 
-`intent install` created this file. `intent list` returned `No intent-enabled packages found.`
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
 
-## Stack And Integrations
+## 5. Project Context
 
-- Runtime: TanStack Start + React 19 + Vite + file-based TanStack Router
-- Package manager: bun — use `bun install`, `bun run dev`, `bun run build`, `bun run check`
-- Toolchain: Biome via `biome.json` and `bun run check`, plus `bun run typecheck` (tsc --noEmit)
-- UI: Tailwind CSS v4, shadcn, lucide, SaaS dashboard
-- Data fetching: TanStack Query calls Start server function in `src/features/dashboard/model.ts`
-- Routing: nested routes under `src/routes/app*` for overview, billing, settings
-- Tables/filters: TanStack Table + TanStack Pacer debounced filtering
-- Forms: TanStack Form for forecast planning
-- Client state: TanStack Store for dashboard prefs + forecast label
-- Local sync: TanStack DB local-only collection mirrors dashboard account signals
-- Long lists: TanStack Virtual for activity stream
-- Database: Neon Postgres via `DATABASE_URL`, Drizzle schema in `src/db/schema.ts`
-- Auth: Better Auth + email/password + Start cookies + Drizzle adapter
-- Monitoring: Sentry TanStack Start package + `instrument.server.mjs`; set `SENTRY_DSN`
+- Runtime: TanStack Start + React 19 + Vite + file-based TanStack Router.
+- Package manager: Bun only.
+- Tooling: Biome via `bun run check`, TypeScript via `bun run typecheck`.
+- UI: Tailwind CSS v4 + shadcn/ui + lucide.
+- Forms: TanStack Form.
+- URL state: nuqs.
+- Server boundary: TanStack Start `createServerFn`.
+- Database: Neon Postgres + Drizzle.
+- Auth: Better Auth + Drizzle adapter.
+- Monitoring: Sentry optional locally, required in production when configured.
 
-## Environment Variables
-
-Required:
-
-- `DATABASE_URL`: Neon Postgres connection string
-- `DATABASE_URL_POOLER`: Neon pooled connection string (serverless)
-- `BETTER_AUTH_SECRET`: 32+ chars — generate with `bunx @better-auth/cli@latest secret`
-- `BETTER_AUTH_URL`: public app URL (e.g., `https://app.example.com`.).
-
-Optional:
-
-- `SENTRY_DSN`: Sentry project DSN
-- `SENTRY_ENVIRONMENT`: `development`, `preview`, or `production`
-
-## Deployment Notes
-
-- Portable to any Node-compatible TanStack Start host running `bun run build` + `bun run start`
-- Serverless: prefer Neon pooled URLs, avoid long-lived local Postgres connections
-- After schema changes: run `bun run db:generate` + `bun run db:migrate`
-- Better Auth schema in Drizzle — regenerate/verify auth tables if Better Auth plugins change
-- Sentry optional locally; production needs `SENTRY_DSN` + source-map handling
-
-## Architecture Decisions
-
-- Dashboard data source: compact, typed, one feature module, real Start server function boundaries
-- Use static seed data so app renders before Neon credentials exist
-- Billing-ready schema/routes, no payment processor yet
-- TanStack DB local-only for client-side signals; server sync is future extension
-- Keep generated demo routes for reference; primary surface is `/` and `/app`
-
-## Known Gotchas
-
-- Scaffold reported `npm install` and shadcn failures — repaired with bun; shadcn added via `npx -y shadcn@latest add --silent --yes button select input textarea slider switch label`
-- TanStack Intent reports no intent-enabled packages
-- `DATABASE_URL` required when Better Auth or Drizzle routes hit DB
-- `bun add` may need filesystem permission in sandboxed environments
-- `bun.lock` is authoritative — do not add npm, pnpm, or yarn lockfiles
-
-## Next Steps
-
-- Wire real Neon queries into dashboard server function when credentials exist
-- Add billing provider tables or webhooks around `subscriptions`
-- Add org membership and route guards around `/app`
-- Configure Sentry release/source-map upload in deployment provider
-- Add tests for route rendering, auth API health, dashboard filtering
-
-## Agent skills
+## 6. Agent skills
 
 ### Issue tracker
 
@@ -102,14 +94,28 @@ Default: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wo
 
 Single-context: `CONTEXT.md` + `docs/adr/` at repo root. See `docs/agents/domain.md`.
 
-## Constraints
+## 7. Context Loading
 
-- **Always run lint + typecheck before committing** — `bun run check` (Biome) + `bun run typecheck` (tsc --noEmit) must both pass. Build verification (`bun run build`) is encouraged for server-function-level errors.
-- **Never use `any`, `unknown`, or `never` types** — always use proper TypeScript types. If the correct type is unclear, research the library's API or define an explicit interface instead of escaping the type system.
-- **When unsure about a library API, type signature, or best practice, always use web search or Context7 documentation query first** — never guess or use workarounds like `as any`. The correct approach exists in the docs.
-- **Always use TanStack Form + shadcn Field components** — never raw `useState` for form field state. Use `useForm` from `@tanstack/react-form`, wrap fields with `Field`/`FieldLabel`/`FieldInput`/`FieldError` from `#/components/ui/field`.
-- **Always use nuqs for URL search params** — never raw `useSearchParams` or manual URL parsing. Import `useQueryState`/`parseAsString` etc. from `nuqs`.
-- **Always use createServerFn for internal API requests** — never raw `fetch` for internal backend calls. Define server functions in feature modules with `createServerFn` from `@tanstack/react-start`.
-- **Always use shadcn/ui primitives** — never raw HTML elements when a shadcn component exists. Use `Button` not `<button>`, `Input` not `<input>`, `Card` not `<div>`, etc. Import from `#/components/ui/*`.
-- **Always use `use-intl` translations for all user-facing text** — every visible string must come from `src/messages/` files. Never hardcode display text in JSX, route context (`beforeLoad` breadcrumb/pageTitle), component defaults, or status labels.
-- **Always check translation coverage when adding/editing routes or components** — ensure all namespaces used in `useTranslations()` calls are defined in both `src/messages/en.ts` (type + value) and `src/messages/id.ts`. Missing keys cause fallback to the English string, which breaks the type contract.
+Before coding or reviewing, load only the docs relevant to the task:
+
+- TypeScript/types → `docs/agents/rules/typescript.md`
+- UI/components/forms → `docs/agents/rules/ui.md`
+- i18n/translations → `docs/agents/rules/i18n.md`
+- Data fetching/server functions → `docs/agents/rules/server-functions.md`
+- Database/schema/migrations → `docs/agents/rules/database.md`
+- Auth/session/guards → `docs/agents/rules/auth.md`
+- Deployment/env/Sentry → `docs/agents/rules/deployment.md`
+- Issues/triage/domain docs → `docs/agents/*.md`
+
+If a required doc does not exist, proceed using this file and mention the missing doc in the final report.
+
+## 8. Non-Negotiable Project Rules
+
+- Use Bun only: `bun install`, `bun run dev`, `bun run build`, `bun run check`, `bun run typecheck`.
+- `bun.lock` is authoritative. Do not add npm, pnpm, or yarn lockfiles.
+- Run `bun run check` and `bun run typecheck` before committing or final handoff.
+- Run `bun run build` when changes touch routing, server functions, auth, database, or deployment behavior.
+- Do not guess library APIs. If unsure, check official docs, Context7, or existing project patterns first.
+- Do not use raw internal `fetch`; use `createServerFn`.
+- Do not use raw `useSearchParams`; use nuqs.
+- Do not hardcode user-facing text; use `use-intl` and update message files.
