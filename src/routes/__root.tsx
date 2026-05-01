@@ -7,6 +7,7 @@ import {
   Scripts,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { NuqsAdapter } from 'nuqs/adapters/tanstack-router'
 import { IntlProvider, useTranslations } from 'use-intl'
 import { TooltipProvider } from '#/components/ui/tooltip'
 import { getCurrentLocale } from '#/lib/i18n.utils'
@@ -52,7 +53,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
-  component: Outlet,
+  component: () => (
+    <NuqsAdapter>
+      <Outlet />
+    </NuqsAdapter>
+  ),
 })
 
 function TitleSetter() {
