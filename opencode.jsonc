@@ -15,7 +15,7 @@
     }
   },
   "instructions": [
-    "AGENTS.md", 
+    "AGENTS.md",
     "docs/agents/rules/typescript.md",
     "docs/agents/rules/ui.md",
     "docs/agents/rules/i18n.md",

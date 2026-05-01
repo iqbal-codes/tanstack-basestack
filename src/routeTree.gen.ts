@@ -15,9 +15,11 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OrgRouteImport } from './routes/_org'
 import { Route as OrgIndexRouteImport } from './routes/_org/index'
 import { Route as OrgProductsIndexRouteImport } from './routes/_org/products/index'
+import { Route as OrgOrdersIndexRouteImport } from './routes/_org/orders/index'
 import { Route as OrgCustomersIndexRouteImport } from './routes/_org/customers/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as OrgProductsNewRouteImport } from './routes/_org/products/new'
+import { Route as OrgOrdersNewRouteImport } from './routes/_org/orders/new'
 import { Route as OrgCustomersNewRouteImport } from './routes/_org/customers/new'
 import { Route as OrgCustomersIdEditRouteImport } from './routes/_org/customers/$id/edit'
 
@@ -50,6 +52,11 @@ const OrgProductsIndexRoute = OrgProductsIndexRouteImport.update({
   path: '/products/',
   getParentRoute: () => OrgRoute,
 } as any)
+const OrgOrdersIndexRoute = OrgOrdersIndexRouteImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => OrgRoute,
+} as any)
 const OrgCustomersIndexRoute = OrgCustomersIndexRouteImport.update({
   id: '/customers/',
   path: '/customers/',
@@ -63,6 +70,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 const OrgProductsNewRoute = OrgProductsNewRouteImport.update({
   id: '/products/new',
   path: '/products/new',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgOrdersNewRoute = OrgOrdersNewRouteImport.update({
+  id: '/orders/new',
+  path: '/orders/new',
   getParentRoute: () => OrgRoute,
 } as any)
 const OrgCustomersNewRoute = OrgCustomersNewRouteImport.update({
@@ -82,9 +94,11 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/customers/new': typeof OrgCustomersNewRoute
+  '/orders/new': typeof OrgOrdersNewRoute
   '/products/new': typeof OrgProductsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/customers/': typeof OrgCustomersIndexRoute
+  '/orders/': typeof OrgOrdersIndexRoute
   '/products/': typeof OrgProductsIndexRoute
   '/customers/$id/edit': typeof OrgCustomersIdEditRoute
 }
@@ -94,9 +108,11 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpRoute
   '/': typeof OrgIndexRoute
   '/customers/new': typeof OrgCustomersNewRoute
+  '/orders/new': typeof OrgOrdersNewRoute
   '/products/new': typeof OrgProductsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/customers': typeof OrgCustomersIndexRoute
+  '/orders': typeof OrgOrdersIndexRoute
   '/products': typeof OrgProductsIndexRoute
   '/customers/$id/edit': typeof OrgCustomersIdEditRoute
 }
@@ -108,9 +124,11 @@ export interface FileRoutesById {
   '/sign-up': typeof SignUpRoute
   '/_org/': typeof OrgIndexRoute
   '/_org/customers/new': typeof OrgCustomersNewRoute
+  '/_org/orders/new': typeof OrgOrdersNewRoute
   '/_org/products/new': typeof OrgProductsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_org/customers/': typeof OrgCustomersIndexRoute
+  '/_org/orders/': typeof OrgOrdersIndexRoute
   '/_org/products/': typeof OrgProductsIndexRoute
   '/_org/customers/$id/edit': typeof OrgCustomersIdEditRoute
 }
@@ -122,9 +140,11 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/customers/new'
+    | '/orders/new'
     | '/products/new'
     | '/api/auth/$'
     | '/customers/'
+    | '/orders/'
     | '/products/'
     | '/customers/$id/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -134,9 +154,11 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/'
     | '/customers/new'
+    | '/orders/new'
     | '/products/new'
     | '/api/auth/$'
     | '/customers'
+    | '/orders'
     | '/products'
     | '/customers/$id/edit'
   id:
@@ -147,9 +169,11 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/_org/'
     | '/_org/customers/new'
+    | '/_org/orders/new'
     | '/_org/products/new'
     | '/api/auth/$'
     | '/_org/customers/'
+    | '/_org/orders/'
     | '/_org/products/'
     | '/_org/customers/$id/edit'
   fileRoutesById: FileRoutesById
@@ -206,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgProductsIndexRouteImport
       parentRoute: typeof OrgRoute
     }
+    '/_org/orders/': {
+      id: '/_org/orders/'
+      path: '/orders'
+      fullPath: '/orders/'
+      preLoaderRoute: typeof OrgOrdersIndexRouteImport
+      parentRoute: typeof OrgRoute
+    }
     '/_org/customers/': {
       id: '/_org/customers/'
       path: '/customers'
@@ -225,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/products/new'
       fullPath: '/products/new'
       preLoaderRoute: typeof OrgProductsNewRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/_org/orders/new': {
+      id: '/_org/orders/new'
+      path: '/orders/new'
+      fullPath: '/orders/new'
+      preLoaderRoute: typeof OrgOrdersNewRouteImport
       parentRoute: typeof OrgRoute
     }
     '/_org/customers/new': {
@@ -247,8 +285,10 @@ declare module '@tanstack/react-router' {
 interface OrgRouteChildren {
   OrgIndexRoute: typeof OrgIndexRoute
   OrgCustomersNewRoute: typeof OrgCustomersNewRoute
+  OrgOrdersNewRoute: typeof OrgOrdersNewRoute
   OrgProductsNewRoute: typeof OrgProductsNewRoute
   OrgCustomersIndexRoute: typeof OrgCustomersIndexRoute
+  OrgOrdersIndexRoute: typeof OrgOrdersIndexRoute
   OrgProductsIndexRoute: typeof OrgProductsIndexRoute
   OrgCustomersIdEditRoute: typeof OrgCustomersIdEditRoute
 }
@@ -256,8 +296,10 @@ interface OrgRouteChildren {
 const OrgRouteChildren: OrgRouteChildren = {
   OrgIndexRoute: OrgIndexRoute,
   OrgCustomersNewRoute: OrgCustomersNewRoute,
+  OrgOrdersNewRoute: OrgOrdersNewRoute,
   OrgProductsNewRoute: OrgProductsNewRoute,
   OrgCustomersIndexRoute: OrgCustomersIndexRoute,
+  OrgOrdersIndexRoute: OrgOrdersIndexRoute,
   OrgProductsIndexRoute: OrgProductsIndexRoute,
   OrgCustomersIdEditRoute: OrgCustomersIdEditRoute,
 }

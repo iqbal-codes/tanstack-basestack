@@ -39,6 +39,40 @@ const form = useAppForm({
 
 Field components use shadcn `Input`, `Textarea`, or `NativeSelect` and are built on shadcn `Field`, `FieldContent`, `FieldLabel`, `FieldError` from `src/components/ui/field.tsx`.
 
+**Array fields (dynamic lists):** TanStack Form supports array fields via `form.AppField` with `mode="array"`. The array field children receive a `FieldApi` with `pushValue()`, `removeValue()`, and `state.value`. Sub-fields within each array item use indexed names like `lineItems[0].productId`:
+
+```tsx
+const form = useAppForm({
+  defaultValues: {
+    lineItems: [{ productId: '', quantity: '1' }],
+  },
+})
+
+// In JSX:
+<form.AppField name="lineItems" mode="array">
+  {(lineItemsField) => (
+    <div>
+      {lineItemsField.state.value.map((_, i) => (
+        <div key={i}>
+          <form.AppField name={`lineItems[${i}].productId`}>
+            {(field) => <field.SelectField label="Product" options={...} />}
+          </form.AppField>
+          <form.AppField name={`lineItems[${i}].quantity`}>
+            {(field) => <field.NumberField label="Qty" />}
+          </form.AppField>
+          <button onClick={() => lineItemsField.removeValue(i)}>Remove</button>
+        </div>
+      ))}
+      <button onClick={() => lineItemsField.pushValue({ productId: '', quantity: '1' })}>
+        Add
+      </button>
+    </div>
+  )}
+</form.AppField>
+```
+
+Reference implementation: `src/routes/_org/orders/new.tsx`.
+
 **URL search params:** The `NuqsAdapter` is registered at root in `src/routes/__root.tsx:57`. Routes use `useQueryState` and `parseAsString` from `nuqs` — see `src/routes/_org/products/index.tsx:39` and `src/routes/_org/customers/index.tsx:36`.
 
 ## Non-Negotiable Rules
@@ -64,10 +98,11 @@ Field components use shadcn `Input`, `Textarea`, or `NativeSelect` and are built
 
 1. Check whether a shadcn/ui component already exists before writing any raw HTML element.
 2. Use `useAppForm` and wrap all fields in `form.AppField`.
-3. Use `useQueryState` for search params, not raw URL parsing.
-4. Import from `#/components/app/page-shell` for page structure.
-5. Use `DataTable` for any list with columns.
-6. Ensure all user-visible strings use translations (see i18n rules).
+3. Use `form.AppField` with `mode="array"` and indexed field names for dynamic lists (e.g., `items[0].name`).
+4. Use `useQueryState` for search params, not raw URL parsing.
+5. Import from `#/components/app/page-shell` for page structure.
+6. Use `DataTable` for any list with columns.
+7. Ensure all user-visible strings use translations (see i18n rules).
 
 ## Verification
 
@@ -79,6 +114,7 @@ Field components use shadcn `Input`, `Textarea`, or `NativeSelect` and are built
 
 - Using `<input>` directly instead of `Input` when a text field is needed.
 - Using `react-hook-form` or raw `useState` for forms — the project has standardized on `@tanstack/react-form` via `useAppForm`.
+- Using raw `<select>`, `<input>`, or `<label>` for form controls inside array fields — use `form.AppField` with `mode="array"` and the field components from `#/components/app/form`.
 - Using `useSearchParams` from React Router — use `nuqs` `useQueryState` instead.
 - Wrapping a `Link` in a `Button` without `asChild` — use `<Button asChild><Link to="...">...</Link></Button>`.
 - Importing icons from anywhere other than `lucide-react`.

@@ -49,6 +49,28 @@ export type Messages = {
     rowsSelected: string
     visibleRows: string
   }
+  orders: {
+    title: string
+    createOrder: string
+    editOrder: string
+    customer: string
+    status: string
+    total: string
+    notes: string
+    quantity: string
+    unitPrice: string
+    lineItems: string
+    save: string
+    saving: string
+    orderCreated: string
+    orderUpdated: string
+    searchPlaceholder: string
+    noOrders: string
+    noOrdersDesc: string
+    noResults: string
+    addLineItem: string
+    removeLineItem: string
+  }
   breadcrumb: {
     dashboard: string
     customers: string
@@ -57,6 +79,8 @@ export type Messages = {
     products: string
     newProduct: string
     editProduct: string
+    orders: string
+    createOrder: string
   }
   status: {
     draft: string
@@ -222,6 +246,28 @@ const en: Messages = {
     rowsSelected: '{selected} of {total} selected',
     visibleRows: '{from}-{to} of {total}',
   },
+  orders: {
+    title: 'Orders',
+    createOrder: 'Create Order',
+    editOrder: 'Edit Order',
+    customer: 'Customer',
+    status: 'Status',
+    total: 'Total',
+    notes: 'Notes',
+    quantity: 'Quantity',
+    unitPrice: 'Unit Price',
+    lineItems: 'Line Items',
+    save: 'Save',
+    saving: 'Saving...',
+    orderCreated: 'Order created successfully',
+    orderUpdated: 'Order updated successfully',
+    searchPlaceholder: 'Search orders...',
+    noOrders: 'No orders yet',
+    noOrdersDesc: 'Create your first draft order to get started.',
+    noResults: 'No orders match your search',
+    addLineItem: 'Add Line Item',
+    removeLineItem: 'Remove',
+  },
   breadcrumb: {
     dashboard: 'Dashboard',
     customers: 'Customers',
@@ -230,6 +276,8 @@ const en: Messages = {
     products: 'Products',
     newProduct: 'New Product',
     editProduct: 'Edit Product',
+    orders: 'Orders',
+    createOrder: 'Create Order',
   },
   status: {
     draft: 'Draft',
