@@ -2,62 +2,63 @@
 
 ## What this is
 
-A multi-tenant SaaS operations dashboard built on **TanStack Start** (React 19, Vite, file-based router). Organizations manage users, billing, and operational actions through a protected `/app` surface. Auth is email/password via **Better Auth** backed by **Neon Postgres** and **Drizzle ORM**.
+**Pabriq** — a multi-tenant MTO (Made-To-Order) SaaS platform built on **TanStack Start** (React 19, Vite, file-based router). Target: custom merchandise, printing, furniture, clothing, and any operation that produces to order.
 
 ## Ubiquitous vocabulary
 
 | Term | Meaning |
 |---|---|
-| **Dashboard** | The `/app` surface — overview, billing, settings. Primary SaaS entry point after sign-in. |
-| **Admin** | Protected `/admin` routes for user management, system health, and operational actions. |
-| **Action** | A tracked operational task with status `Ready`, `Review`, or `Blocked`. Owned by a role. |
-| **User** | An authenticated person with a role (`Owner`, `Admin`, `Operator`) and status (`Active`, `Invited`, `Suspended`). |
-| **Better Auth** | The authentication layer. Manages `user`, `session`, `account`, and `verification` tables via Drizzle adapter. |
-| **Server function** | A TanStack Start `createServerFn` — called from the client via TanStack Query. |
-| **Store** | A TanStack Store holding client-side UI preferences (density, banner text). Not synced to server. |
-| **Collection** | A TanStack DB local-only collection mirroring operational data (e.g., admin actions). Client-side only. |
+| **Organization** | A tenant — an MTO business using Pabriq. Has its own subdomain (`{slug}.localhost:3000`), members, settings, and data. |
+| **Owner** | Full-access org member. Can delete org, manage billing, configure everything. |
+| **Admin** | Operations lead. Manages orders, products, customers, members, settings. Cannot delete org. |
+| **Member** | Basic org member. Can view and create certain resources. Read-limited. |
+| **Operator** | Shop floor worker. Sees production menu only. Can advance tasks through kanban stages. |
+| **Customer** | External — places/completes orders via secure token link (no login). |
+| **Subdomain** | The org identifier in the URL. `acme.pabriq.com` → resolves org by slug. |
+| **Better Auth** | Auth layer. Manages users, sessions, orgs, members, invitations via Drizzle adapter. Organization plugin enabled. |
+| **RLS** | Row-Level Security. `org_id` column on every business table. Filtered via Postgres `set_config('app.current_org_id', ...)`. |
+| **Server function** | TanStack Start `createServerFn` — type-safe RPC, called from router or client. |
+| **Application Component** | Project-wide reusable UI composition used across internal workspace and public flows. Built from shadcn/ui primitives and TanStack libraries; must not assume authentication, organization membership, or a specific route context. |
+| **Application Data Table** | Application Component for workspace resource lists. Renders server-backed table/card views from feature-owned data, URL state, filters, permissions, and actions. |
+| **Apex** | The root domain (`pabriq.com`, `localhost:3000`). Sign-in, sign-up, org management. No org context. |
 
 ## Architecture
 
 ```
 src/
-├── db/              # Drizzle schema (user, session, account, verification)
-├── features/        # Feature modules (auth, admin) — server functions + types + stores
-│   ├── auth/        # AuthForm component, sign-in/sign-up
-│   └── admin/       # Admin model (types, seed data, server fn, store, collection)
-├── routes/          # File-based TanStack Router routes
-│   ├── index.tsx        # /
-│   ├── sign-in.tsx      # /sign-in
-│   ├── sign-up.tsx      # /sign-up
-│   ├── admin.tsx        # /admin layout
-│   └── admin/           # /admin/users, /admin/system
+├── db/              # Drizzle schema (auth + org tables)
+├── features/        # domain modules (auth/org, etc.)
+├── routes/
+│   ├── __root.tsx        root layout
+│   ├── sign-in.tsx       /sign-in
+│   ├── sign-up.tsx       /sign-up
+│   ├── orgs/             /orgs, /orgs/new  — org picker/creation
+│   ├── _org.tsx          pathless layout — org resolution via subdomain
+│   └── _org/             org-scoped routes (dashboard, orders, etc.)
 ├── components/      # Shared UI (shadcn/ui wrappers)
-├── integrations/    # TanStack Query provider wiring
-├── lib/             # Auth client, i18n utils
+├── lib/             # Auth client, RLS helpers, subdomain utils
 └── messages/        # next-intl translation files
 ```
 
 ## Key decisions
 
-- **Seed data over empty state**: The admin dashboard renders static seed data (`adminSummary`) so the UI works without database credentials.
-- **Local-only TanStack DB**: Operational signals (admin actions) live in client-side collections. Server sync is a future extension.
-- **Billing-ready, not billing-active**: `subscriptions` table structure exists in the planned schema but no payment processor is integrated.
-- **i18n from day one**: All user-facing strings use `use-intl` / `next-intl`. Translation files in `src/messages/`.
-- **shadcn/ui components only**: No emoji or icon libraries outside lucide-react (which shadcn ships).
-
-## Boundaries
-
-| Boundary | Tech |
-|---|---|
-| Data fetching | TanStack Query → TanStack Start server functions |
-| Client state | TanStack Store (UI prefs) + TanStack DB (operational data) |
-| Persistence | Neon Postgres via Drizzle (server), local-only DB collections (client) |
-| Auth | Better Auth with Drizzle adapter, cookie-based sessions |
-| Routing | TanStack Router, file-based, SSR query integration |
-| Forms | TanStack Form (auth forms, forecast planning) |
-| Monitoring | Sentry via `@sentry/tanstack-start` |
-| Styling | Tailwind CSS v4 + shadcn/ui |
+- **Subdomain multi-tenancy**: orgs identified by subdomain (`{slug}.localhost:3000`). Middleware in `_org.tsx`'s `beforeLoad` resolves org from host header, validates membership, sets RLS context.
+- **Better Auth org plugin**: handles org CRUD, member management, invitations, and RBAC via `createAccessControl()`.
+- **RLS for data isolation**: `org_id` FK on all business tables. Policy filters by `current_setting('app.current_org_id')`.
+- **Single-tenant mode available**: `VITE_ENABLE_ORGANIZATIONS=false` hides org switcher and creation, behaves like a white-label app. Underlying schema stays multi-tenant-ready.
+- **i18n from day one**: All user-facing strings use `use-intl` / `next-intl`.
+- **shadcn/ui only**: No emoji or icon libraries outside lucide-react.
 
 ## Current state
 
-The app runs with static seed data. Database tables are defined but not yet wired to real Neon queries. Auth flow (sign-in/sign-up) is functional. Admin routes are protected. Next steps: connect real Neon queries, add org membership guards, wire billing tables.
+**Completed — Slice 1: Subdomain Auth + Organization Flow**
+- Better Auth org plugin configured with owner/admin/member/operator roles
+- Orgs picker and creation flow at apex domain
+- Subdomain resolution in `_org` layout route
+- RLS helpers for org-scoped queries
+- Old `/admin` routes removed
+- Route tree regenerated with new structure
+- Biome check passing
+- Session cookie shared across subdomains (`.localhost`)
+
+**Next**: Wire real Neon queries into dashboard, add order intake flow, build core MTO features.
