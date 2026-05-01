@@ -24,6 +24,10 @@ export function canAdvanceProductionTask(role: Role): boolean {
   return role === 'owner' || role === 'admin'
 }
 
+export function canManageCustomers(role: Role): boolean {
+  return role === 'owner' || role === 'admin'
+}
+
 export function canViewProduction(role: Role): boolean {
   return role === 'owner' || role === 'admin'
 }

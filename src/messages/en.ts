@@ -33,8 +33,25 @@ export type Messages = {
     confirm: string
     cancel: string
   }
+  dataTable: {
+    clearFilters: string
+    columnVisibility: string
+    errorRetry: string
+    errorTitle: string
+    firstPage: string
+    lastPage: string
+    nextPage: string
+    of: string
+    page: string
+    perPage: string
+    previousPage: string
+    resetColumns: string
+    rowsSelected: string
+    visibleRows: string
+  }
   breadcrumb: {
     dashboard: string
+    customers: string
   }
   status: {
     draft: string
@@ -72,6 +89,29 @@ export type Messages = {
     invoices: string
     production: string
     settings: string
+  }
+  customers: {
+    title: string
+    createCustomer: string
+    editCustomer: string
+    name: string
+    businessName: string
+    email: string
+    phone: string
+    address: string
+    notes: string
+    active: string
+    inactive: string
+    searchPlaceholder: string
+    noCustomers: string
+    noResults: string
+    save: string
+    saving: string
+    delete: string
+    deleteConfirm: string
+    customerCreated: string
+    customerUpdated: string
+    nameRequired: string
   }
   dashboard: {
     welcome: string
@@ -120,8 +160,25 @@ const en: Messages = {
     confirm: 'Confirm',
     cancel: 'Cancel',
   },
+  dataTable: {
+    clearFilters: 'Clear filters',
+    columnVisibility: 'Columns',
+    errorRetry: 'Retry',
+    errorTitle: 'Something went wrong',
+    firstPage: 'First page',
+    lastPage: 'Last page',
+    nextPage: 'Next page',
+    of: 'of',
+    page: 'Page',
+    perPage: 'Per page',
+    previousPage: 'Previous page',
+    resetColumns: 'Reset columns',
+    rowsSelected: '{selected} of {total} selected',
+    visibleRows: '{from}-{to} of {total}',
+  },
   breadcrumb: {
     dashboard: 'Dashboard',
+    customers: 'Customers',
   },
   status: {
     draft: 'Draft',
@@ -159,6 +216,29 @@ const en: Messages = {
     invoices: 'Invoices',
     production: 'Production',
     settings: 'Settings',
+  },
+  customers: {
+    title: 'Customers',
+    createCustomer: 'Create Customer',
+    editCustomer: 'Edit Customer',
+    name: 'Name',
+    businessName: 'Business Name',
+    email: 'Email',
+    phone: 'Phone',
+    address: 'Address / Delivery Notes',
+    notes: 'Internal Notes',
+    active: 'Active',
+    inactive: 'Inactive',
+    searchPlaceholder: 'Search customers...',
+    noCustomers: 'No customers yet',
+    noResults: 'No customers match your search',
+    save: 'Save',
+    saving: 'Saving...',
+    delete: 'Delete',
+    deleteConfirm: 'Are you sure you want to delete this customer?',
+    customerCreated: 'Customer created successfully',
+    customerUpdated: 'Customer updated successfully',
+    nameRequired: 'Name is required',
   },
   dashboard: {
     welcome: 'Welcome to your Pabriq workspace',

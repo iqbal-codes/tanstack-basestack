@@ -3,6 +3,7 @@ import {
   canAdvanceProductionTask,
   canApproveOrders,
   canCreateOrders,
+  canManageCustomers,
   canManageInvoices,
   canManageMembers,
   canManageProducts,
@@ -58,5 +59,11 @@ describe('canAdvanceProductionTask', () => {
 describe('canViewProduction', () => {
   it('allows owner and admin', () => {
     expectPermissions(canViewProduction, ['owner', 'admin'])
+  })
+})
+
+describe('canManageCustomers', () => {
+  it('allows owner and admin', () => {
+    expectPermissions(canManageCustomers, ['owner', 'admin'])
   })
 })

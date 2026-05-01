@@ -16,6 +16,21 @@ import appCss from '../styles.css?url'
 
 interface MyRouterContext {
   queryClient: QueryClient
+  session?: {
+    session: Record<string, unknown>
+    user: {
+      id: string
+      name: string | null
+      email: string
+      image: string | null
+    }
+  }
+  org?: {
+    id: string
+    name: string
+    slug: string
+    logo?: string | null
+  }
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
