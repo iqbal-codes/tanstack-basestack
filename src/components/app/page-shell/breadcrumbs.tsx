@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '#/components/ui/breadcrumb'
+import { Button } from '#/components/ui/button'
 
 export function Breadcrumbs() {
   const matches = useRouterState({ select: (s) => s.matches })
@@ -25,9 +26,11 @@ export function Breadcrumbs() {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link to="/">
-              <Home className="h-4 w-4" />
-            </Link>
+            <Button size="sm" className="size-7" variant="ghost" asChild>
+              <Link to="/">
+                <Home className="h-4 w-4" />
+              </Link>
+            </Button>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {crumbs.map((crumb, i) => {
