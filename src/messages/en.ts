@@ -1,4 +1,67 @@
-const en = {
+export type Messages = {
+  auth: {
+    signIn: string
+    signUp: string
+    email: string
+    password: string
+    name: string
+    signInTitle: string
+    signUpTitle: string
+    signInDesc: string
+    signUpDesc: string
+    alreadyHaveAccount: string
+    needAccount: string
+    createOne: string
+    nameMin: string
+    emailValid: string
+    passwordMin: string
+    passwordDesc: string
+    authFailed: string
+  }
+  admin: {
+    logOut: string
+  }
+  common: {
+    loading: string
+    pageNotFound: string
+    pageNotFoundDesc: string
+    goHome: string
+  }
+  org: {
+    title: string
+    welcome: string
+    createDesc: string
+    create: string
+    name: string
+    namePlaceholder: string
+    nameMin: string
+    nameInvalid: string
+    creating: string
+    creationFailed: string
+    taken: string
+    redirecting: string
+  }
+  sidebar: {
+    dashboard: string
+    orders: string
+    customers: string
+    products: string
+    invoices: string
+    production: string
+    settings: string
+  }
+  dashboard: {
+    welcome: string
+    activeOrders: string
+    activeOrdersDesc: string
+    products: string
+    productsDesc: string
+    invoices: string
+    invoicesDesc: string
+  }
+}
+
+const en: Messages = {
   auth: {
     signIn: 'Sign in',
     signUp: 'Create an account',
@@ -60,7 +123,6 @@ const en = {
     invoices: 'Invoices',
     invoicesDesc: 'Outstanding invoices',
   },
-} as const
+}
 
-export type Messages = typeof en
 export default en

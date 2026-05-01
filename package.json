@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "check": "biome check .",
+    "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
     "start": "node --import ./dist/server/instrument.server.mjs dist/server/server.js",
     "db:generate": "drizzle-kit generate",

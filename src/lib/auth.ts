@@ -52,9 +52,9 @@ const admin = ac.newRole({
 
 const member = ac.newRole({
   organization: [],
-  member: ['read'],
+  member: [],
   invitation: [],
-  team: ['read'],
+  team: [],
   ac: [],
   customer: ['create', 'read'],
   order: ['create', 'read'],

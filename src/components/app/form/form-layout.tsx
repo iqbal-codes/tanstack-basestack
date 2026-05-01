@@ -1,4 +1,3 @@
-import type { ReactFormApi } from '@tanstack/react-form'
 import { createContext, useContext, useRef } from 'react'
 import { FieldGroup, FieldLegend, FieldSet } from '#/components/ui/field'
 import { cn } from '#/lib/utils'
@@ -15,19 +14,19 @@ export function useFormRootContext() {
   return ctx
 }
 
-type FormRootProps<TFormData> = {
-  form: ReactFormApi<TFormData, Record<string, unknown>>
+type FormRootProps = {
+  form: { handleSubmit: () => void }
   onAnyValueChange?: () => void
   className?: string
   children: React.ReactNode
 }
 
-export function FormRoot<TFormData>({
+export function FormRoot({
   form,
   onAnyValueChange,
   className,
   children,
-}: FormRootProps<TFormData>) {
+}: FormRootProps) {
   const ctx = useRef<FormRootContextValue>({ onAnyValueChange }).current
   ctx.onAnyValueChange = onAnyValueChange
 
