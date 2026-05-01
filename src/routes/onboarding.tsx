@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'use-intl'
 import { useAppForm } from '#/components/app/form'
@@ -23,7 +23,7 @@ export const Route = createFileRoute('/onboarding')({
   beforeLoad: async () => {
     const session = await getCurrentSession()
     if (!session) {
-      throw redirect({ to: '/sign-in' })
+      throw redirect({ to: '/sign-in', search: { redirect: undefined } })
     }
   },
   component: OnboardingPage,
@@ -32,6 +32,7 @@ export const Route = createFileRoute('/onboarding')({
 function OnboardingPage() {
   const t = useTranslations('org')
   const ct = useTranslations('common')
+  const navigate = useNavigate()
   const { data: orgs, isLoading } = useQuery({
     queryKey: ['user-orgs'],
     queryFn: () => listUserOrgs(),
@@ -39,9 +40,9 @@ function OnboardingPage() {
 
   useEffect(() => {
     if (orgs && orgs.length > 0) {
-      window.location.href = '/'
+      navigate({ to: '/' })
     }
-  }, [orgs])
+  }, [orgs, navigate])
 
   const [submitError, setSubmitError] = useState<string | null>(null)
 
@@ -53,12 +54,12 @@ function OnboardingPage() {
       const result = await createOrganization({ data: { name: value.name } })
 
       if (!result.ok) {
-        const key = ERROR_MAP[result.error] || 'creationFailed'
-        setSubmitError(t(key as never))
+        const key = ERROR_MAP[result.error as keyof typeof ERROR_MAP]
+        setSubmitError(key ? t(key) : t('creationFailed'))
         return
       }
 
-      window.location.href = '/'
+      navigate({ to: '/' })
     },
   })
 

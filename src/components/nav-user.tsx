@@ -85,7 +85,10 @@ export function NavUser({
               onClick={async () => {
                 await authClient.signOut()
                 await router.invalidate()
-                await router.navigate({ to: '/sign-in' })
+                await router.navigate({
+                  to: '/sign-in',
+                  search: { redirect: undefined },
+                })
               }}
             >
               <LogOut />

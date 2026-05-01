@@ -44,8 +44,9 @@ function randomSuffix() {
 
 type CreateOrgResult = { ok: true } | { ok: false; error: string }
 
-export const createOrganization = createServerFn({ method: 'POST' }).handler(
-  async ({ data }: { data: { name: string } }): Promise<CreateOrgResult> => {
+export const createOrganization = createServerFn({ method: 'POST' })
+  .inputValidator((input: { name: string }) => input)
+  .handler(async ({ data }): Promise<CreateOrgResult> => {
     const auth = await import('#/lib/auth').then((m) => m.auth)
     const headers = getRequestHeaders()
 
@@ -71,5 +72,4 @@ export const createOrganization = createServerFn({ method: 'POST' }).handler(
     }
 
     return { ok: false, error: 'name_taken' }
-  },
-)
+  })

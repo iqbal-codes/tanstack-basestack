@@ -13,6 +13,7 @@ import {
 } from '#/components/ui/sidebar'
 import { listUserOrgs } from '#/features/auth/org'
 import { getCurrentSession } from '#/lib/auth-session'
+import { Separator } from '#/components/ui/separator'
 
 export const Route = createFileRoute('/_org')({
   beforeLoad: async ({ location }) => {
@@ -52,8 +53,9 @@ function OrgLayout() {
       <AppSidebar user={user} org={org} />
       <SidebarInset>
         <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
-          <div className="flex items-center gap-2 md:gap-0">
+          <div className="flex items-center gap-2">
             <SidebarTrigger />
+            <Separator orientation="vertical" className="h-6!" />
             <Breadcrumbs />
           </div>
           <div className="md:hidden ml-auto flex items-center gap-2">
