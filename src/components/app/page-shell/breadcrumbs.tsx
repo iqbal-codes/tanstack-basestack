@@ -1,0 +1,54 @@
+import { Link, useRouterState } from '@tanstack/react-router'
+import { ChevronsRight, Home } from 'lucide-react'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '#/components/ui/breadcrumb'
+
+export function Breadcrumbs() {
+  const matches = useRouterState({ select: (s) => s.matches })
+
+  const crumbs = matches.filter(
+    (m) =>
+      m.routeId !== '__root__' &&
+      (m.context as unknown as Record<string, unknown>)?.breadcrumb,
+  )
+
+  if (crumbs.length === 0) return null
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link to="/">
+              <Home className="h-4 w-4" />
+            </Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        {crumbs.map((crumb, i) => {
+          const label = (crumb.context as unknown as Record<string, unknown>)
+            ?.breadcrumb as string
+          return (
+            <BreadcrumbItem key={crumb.routeId}>
+              <BreadcrumbSeparator>
+                <ChevronsRight />
+              </BreadcrumbSeparator>
+              {i === crumbs.length - 1 ? (
+                <BreadcrumbPage>{label}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link to={crumb.pathname}>{label}</Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+          )
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
+  )
+}
