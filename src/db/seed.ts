@@ -41,4 +41,30 @@ export const ddl = [
     created_at TIMESTAMP,
     updated_at TIMESTAMP
   )`,
+  `CREATE TABLE IF NOT EXISTS "organization" (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    logo TEXT,
+    metadata TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "member" (
+    id TEXT PRIMARY KEY,
+    organization_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    role TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS "invitation" (
+    id TEXT PRIMARY KEY,
+    organization_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    role TEXT NOT NULL,
+    status TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    inviter_id TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL
+  )`,
 ]
