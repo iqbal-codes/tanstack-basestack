@@ -9,7 +9,10 @@ type PageContentProps = {
 export function PageContent({ children, className }: PageContentProps) {
   return (
     <main
-      className={cn('max-w-7xl px-4 md:px-6 py-6 space-y-6 mx-auto', className)}
+      className={cn(
+        'max-w-7xl px-4 md:px-6 py-6 space-y-6 mx-auto overflow-x-auto w-full',
+        className,
+      )}
     >
       {children}
     </main>
