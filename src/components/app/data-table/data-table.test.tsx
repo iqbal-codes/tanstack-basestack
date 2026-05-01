@@ -30,6 +30,7 @@ const columns: AppColumnDef<Item>[] = [
 const labels: DataTableLabels = {
   clearFilters: 'Clear filters',
   columnVisibility: 'Columns',
+  errorRetry: 'Retry',
   errorTitle: 'Something went wrong',
   firstPage: 'First page',
   lastPage: 'Last page',

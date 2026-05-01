@@ -199,7 +199,7 @@ export function DataTable<TData>({
         {onRefetch && (
           <Button variant="outline" className="mt-4" onClick={onRefetch}>
             <RefreshCw className="mr-2 size-4" />
-            Retry
+            {labels.errorRetry}
           </Button>
         )}
       </div>

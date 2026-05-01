@@ -1,15 +1,49 @@
 import { render, screen } from '@testing-library/react'
+import { IntlProvider } from 'use-intl'
 import { describe, expect, it } from 'vitest'
 import { StatusBadge } from './status-badge'
 
+const testMessages = {
+  status: {
+    draft: 'Draft',
+    pending: 'Pending',
+    approved: 'Approved',
+    production: 'In Production',
+    in_delivery: 'In Delivery',
+    completed: 'Completed',
+    cancelled: 'Cancelled',
+    active: 'Active',
+    inactive: 'Inactive',
+    paid: 'Paid',
+    overdue: 'Overdue',
+    failed: 'Failed',
+  },
+}
+
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <IntlProvider locale="en" messages={testMessages}>
+      {children}
+    </IntlProvider>
+  )
+}
+
 describe('StatusBadge', () => {
   it('renders the status label for a known status', () => {
-    render(<StatusBadge status="draft" />)
+    render(
+      <TestWrapper>
+        <StatusBadge status="draft" />
+      </TestWrapper>,
+    )
     expect(screen.getByText('Draft')).toBeDefined()
   })
 
   it('renders fallback label for an unknown status', () => {
-    render(<StatusBadge status="unknown" />)
+    render(
+      <TestWrapper>
+        <StatusBadge status="unknown" />
+      </TestWrapper>,
+    )
     expect(screen.getByText('unknown')).toBeDefined()
   })
 
@@ -24,7 +58,11 @@ describe('StatusBadge', () => {
       'cancelled',
     ]
     for (const s of statuses) {
-      render(<StatusBadge status={s} />)
+      render(
+        <TestWrapper>
+          <StatusBadge status={s} />
+        </TestWrapper>,
+      )
     }
     expect(screen.getByText('Draft')).toBeDefined()
     expect(screen.getByText('Pending')).toBeDefined()

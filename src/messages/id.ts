@@ -23,12 +23,35 @@ const id: Messages = {
   admin: {
     logOut: 'Keluar',
   },
+  app: {
+    title: 'Konsol Admin',
+    retry: 'Coba Lagi',
+  },
   common: {
     loading: 'Memuat',
     pageNotFound: 'Halaman tidak ditemukan',
     pageNotFoundDesc:
       'Halaman yang Anda cari tidak ada atau mungkin telah dipindahkan.',
     goHome: 'Ke beranda',
+    confirm: 'Konfirmasi',
+    cancel: 'Batal',
+  },
+  breadcrumb: {
+    dashboard: 'Dasbor',
+  },
+  status: {
+    draft: 'Draf',
+    pending: 'Tertunda',
+    approved: 'Disetujui',
+    production: 'Dalam Produksi',
+    in_delivery: 'Dalam Pengiriman',
+    completed: 'Selesai',
+    cancelled: 'Dibatalkan',
+    active: 'Aktif',
+    inactive: 'Tidak Aktif',
+    paid: 'Lunas',
+    overdue: 'Jatuh Tempo',
+    failed: 'Gagal',
   },
   org: {
     title: 'Organisasi',

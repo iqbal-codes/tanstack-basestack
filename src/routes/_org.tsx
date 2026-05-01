@@ -4,6 +4,7 @@ import {
   redirect,
   useRouterState,
 } from '@tanstack/react-router'
+import { useTranslations } from 'use-intl'
 import { Breadcrumbs } from '#/components/app/page-shell/breadcrumbs'
 import { AppSidebar } from '#/components/app-sidebar'
 import { Separator } from '#/components/ui/separator'
@@ -37,6 +38,7 @@ export const Route = createFileRoute('/_org')({
 
 function OrgLayout() {
   const { session, org } = Route.useRouteContext()
+  const bt = useTranslations('breadcrumb')
   const user = {
     name: session.user.name || session.user.email,
     email: session.user.email,
@@ -45,8 +47,9 @@ function OrgLayout() {
 
   const matches = useRouterState({ select: (s) => s.matches })
   const leafMatch = matches.filter((m) => m.routeId !== '__root__').at(-1)
-  const pageTitle = (leafMatch?.context as unknown as Record<string, unknown>)
-    ?.pageTitle as string | undefined
+  const pageTitleKey = (
+    leafMatch?.context as unknown as Record<string, unknown>
+  )?.pageTitle as string | undefined
 
   return (
     <SidebarProvider>
@@ -60,7 +63,7 @@ function OrgLayout() {
           </div>
           <div className="md:hidden ml-auto flex items-center gap-2">
             <span className="text-sm font-medium truncate max-w-32">
-              {pageTitle}
+              {pageTitleKey ? bt(pageTitleKey) : null}
             </span>
           </div>
         </header>

@@ -12,8 +12,8 @@ import {
 
 export const Route = createFileRoute('/_org/')({
   beforeLoad: () => ({
-    breadcrumb: 'Dashboard',
-    pageTitle: 'Dashboard',
+    breadcrumb: 'dashboard',
+    pageTitle: 'dashboard',
   }),
   component: OrgDashboard,
 })

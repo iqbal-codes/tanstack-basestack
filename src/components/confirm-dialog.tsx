@@ -1,3 +1,4 @@
+import { useTranslations } from 'use-intl'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,11 +26,12 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   variant = 'default',
   onConfirm,
 }: ConfirmDialogProps) {
+  const t = useTranslations('common')
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -38,7 +40,7 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogCancel>{cancelLabel ?? t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className={
@@ -47,7 +49,7 @@ export function ConfirmDialog({
                 : ''
             }
           >
-            {confirmLabel}
+            {confirmLabel ?? t('confirm')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -17,6 +17,7 @@ export type AppColumnMeta = {
 export type DataTableLabels = {
   clearFilters: string
   columnVisibility: string
+  errorRetry: string
   errorTitle: string
   firstPage: string
   lastPage: string

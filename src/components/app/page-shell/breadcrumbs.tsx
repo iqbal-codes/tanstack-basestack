@@ -1,5 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import { ChevronsRight, Home } from 'lucide-react'
+import { useTranslations } from 'use-intl'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +13,7 @@ import { Button } from '#/components/ui/button'
 
 export function Breadcrumbs() {
   const matches = useRouterState({ select: (s) => s.matches })
+  const t = useTranslations('breadcrumb')
 
   const crumbs = matches.filter(
     (m) =>
@@ -42,10 +44,10 @@ export function Breadcrumbs() {
                 <ChevronsRight />
               </BreadcrumbSeparator>
               {i === crumbs.length - 1 ? (
-                <BreadcrumbPage>{label}</BreadcrumbPage>
+                <BreadcrumbPage>{t(label)}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>
-                  <Link to={crumb.pathname}>{label}</Link>
+                  <Link to={crumb.pathname}>{t(label)}</Link>
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

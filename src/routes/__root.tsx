@@ -7,7 +7,7 @@ import {
   Scripts,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { IntlProvider } from 'use-intl'
+import { IntlProvider, useTranslations } from 'use-intl'
 import { TooltipProvider } from '#/components/ui/tooltip'
 import { getCurrentLocale } from '#/lib/i18n.utils'
 import { messages } from '#/messages'
@@ -28,9 +28,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      {
-        title: 'Admin Console',
-      },
     ],
     links: [
       {
@@ -42,6 +39,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   shellComponent: RootDocument,
   component: Outlet,
 })
+
+function TitleSetter() {
+  const t = useTranslations('app')
+  return <title>{t('title')}</title>
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const locale = getCurrentLocale()
@@ -56,6 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
       >
         <IntlProvider locale={locale} messages={messages[locale ?? 'en']}>
+          <TitleSetter />
           <TooltipProvider>{children}</TooltipProvider>
         </IntlProvider>
         <TanStackDevtools

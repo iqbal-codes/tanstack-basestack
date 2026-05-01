@@ -6,8 +6,24 @@ import {
   RouterProvider,
 } from '@tanstack/react-router'
 import { render, screen } from '@testing-library/react'
+import { IntlProvider } from 'use-intl'
 import { describe, expect, it } from 'vitest'
 import { Breadcrumbs } from './breadcrumbs'
+
+const testMessages = {
+  breadcrumb: {
+    dashboard: 'Dashboard',
+    orders: 'Orders',
+  },
+}
+
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <IntlProvider locale="en" messages={testMessages}>
+      {children}
+    </IntlProvider>
+  )
+}
 
 async function renderBreadcrumbs(
   routes: { path: string; breadcrumb: string }[],
@@ -33,7 +49,12 @@ async function renderBreadcrumbs(
   await router.load()
 
   render(
-    <RouterProvider router={router} defaultComponent={() => <Breadcrumbs />} />,
+    <TestWrapper>
+      <RouterProvider
+        router={router}
+        defaultComponent={() => <Breadcrumbs />}
+      />
+    </TestWrapper>,
   )
 }
 
@@ -47,23 +68,25 @@ describe('Breadcrumbs', () => {
     await router.load()
 
     const { container } = render(
-      <RouterProvider
-        router={router}
-        defaultComponent={() => <Breadcrumbs />}
-      />,
+      <TestWrapper>
+        <RouterProvider
+          router={router}
+          defaultComponent={() => <Breadcrumbs />}
+        />
+      </TestWrapper>,
     )
     expect(container.textContent).toBe('')
   })
 
   it('renders a single breadcrumb for a dashboard route', async () => {
-    await renderBreadcrumbs([{ path: '/', breadcrumb: 'Dashboard' }])
+    await renderBreadcrumbs([{ path: '/', breadcrumb: 'dashboard' }])
     expect(screen.getByText('Dashboard')).toBeDefined()
   })
 
   it('renders the last crumb as the current page', async () => {
     await renderBreadcrumbs([
-      { path: '/', breadcrumb: 'Dashboard' },
-      { path: '/orders', breadcrumb: 'Orders' },
+      { path: '/', breadcrumb: 'dashboard' },
+      { path: '/orders', breadcrumb: 'orders' },
     ])
     expect(screen.getByText('Orders')).toBeDefined()
   })

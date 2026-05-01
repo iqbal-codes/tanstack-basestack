@@ -21,11 +21,34 @@ export type Messages = {
   admin: {
     logOut: string
   }
+  app: {
+    title: string
+    retry: string
+  }
   common: {
     loading: string
     pageNotFound: string
     pageNotFoundDesc: string
     goHome: string
+    confirm: string
+    cancel: string
+  }
+  breadcrumb: {
+    dashboard: string
+  }
+  status: {
+    draft: string
+    pending: string
+    approved: string
+    production: string
+    in_delivery: string
+    completed: string
+    cancelled: string
+    active: string
+    inactive: string
+    paid: string
+    overdue: string
+    failed: string
   }
   org: {
     title: string
@@ -84,12 +107,35 @@ const en: Messages = {
   admin: {
     logOut: 'Log out',
   },
+  app: {
+    title: 'Admin Console',
+    retry: 'Retry',
+  },
   common: {
     loading: 'Loading',
     pageNotFound: 'Page not found',
     pageNotFoundDesc:
       "The page you're looking for doesn't exist or may have been moved.",
     goHome: 'Go home',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+  },
+  breadcrumb: {
+    dashboard: 'Dashboard',
+  },
+  status: {
+    draft: 'Draft',
+    pending: 'Pending',
+    approved: 'Approved',
+    production: 'In Production',
+    in_delivery: 'In Delivery',
+    completed: 'Completed',
+    cancelled: 'Cancelled',
+    active: 'Active',
+    inactive: 'Inactive',
+    paid: 'Paid',
+    overdue: 'Overdue',
+    failed: 'Failed',
   },
   org: {
     title: 'Organizations',
