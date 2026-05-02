@@ -221,6 +221,21 @@ export type Messages = {
       preview: string
     }
   }
+  address: {
+    title: string
+    areaSearch: string
+    areaSearchPlaceholder: string
+    noResults: string
+    streetAddress: string
+    streetAddressPlaceholder: string
+    saveAsCustomerAddress: string
+    isWni: string
+    isWna: string
+    areaNotSupported: string
+    orgAddressRequired: string
+    areaNotFound: string
+    defaultAddress: string
+  }
 }
 
 const en: Messages = {
@@ -446,6 +461,21 @@ const en: Messages = {
       noBreakpoints: 'No pricing breakpoints configured',
       preview: 'Pricing Preview',
     },
+  },
+  address: {
+    title: 'Address',
+    areaSearch: 'Search area...',
+    areaSearchPlaceholder: 'Search subdistrict, district, city, or postal code',
+    noResults: 'Area not found',
+    streetAddress: 'Street Address',
+    streetAddressPlaceholder: 'e.g. Jl. Raya Bogor No. 123',
+    saveAsCustomerAddress: 'Save as customer address',
+    isWni: 'Indonesian (WNI)',
+    isWna: 'Foreign (WNA)',
+    areaNotSupported: 'Shipping calculation not available for WNA customers',
+    orgAddressRequired: 'Please set your organization address to continue',
+    areaNotFound: 'Area not found. Please check the area name.',
+    defaultAddress: 'Default address',
   },
 }
 

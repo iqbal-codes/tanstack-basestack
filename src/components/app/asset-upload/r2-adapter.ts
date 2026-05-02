@@ -74,7 +74,7 @@ export function createR2UploaderAdapter(
 async function computeSha256(buffer: Buffer): Promise<string> {
   const hashBuffer = await crypto.subtle.digest(
     'SHA-256',
-    new Uint8Array(buffer)
+    new Uint8Array(buffer),
   )
   const hashArray = Array.from(new Uint8Array(hashBuffer))
   return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')

@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from 'drizzle-orm'
+import { and, desc, eq, ilike, sql } from 'drizzle-orm'
 import { db } from '#/db/index'
 import {
   customers as customersTable,
@@ -16,6 +16,8 @@ export type Order = {
   status: string
   notes: string | null
   total: number
+  quoteNumber: string | null
+  validUntil: Date | null
   createdAt: Date
   updatedAt: Date
 }
@@ -63,6 +65,7 @@ export type OrderRow = {
   customerName: string
   status: string
   total: number
+  quoteNumber: string | null
   createdAt: Date
 }
 
@@ -78,6 +81,7 @@ export async function listOrders(orgId: string): Promise<ListOrdersResult> {
       customerName: customersTable.name,
       status: ordersTable.status,
       total: ordersTable.total,
+      quoteNumber: ordersTable.quoteNumber,
       createdAt: ordersTable.createdAt,
     })
     .from(ordersTable)
@@ -180,6 +184,31 @@ export async function createDraftOrder(
 
   const orderTotal = items.reduce((sum, i) => sum + i.total, 0)
 
+  const year = new Date().getFullYear()
+  const quotePrefix = `QT-${year}-`
+  const existingQuoteRows = await db
+    .select({ quoteNumber: ordersTable.quoteNumber })
+    .from(ordersTable)
+    .where(
+      and(
+        eq(ordersTable.orgId, orgId),
+        ilike(ordersTable.quoteNumber, `${quotePrefix}%`),
+      ),
+    )
+    .orderBy(desc(ordersTable.quoteNumber))
+    .limit(1)
+
+  const nextNum =
+    existingQuoteRows.length > 0 && existingQuoteRows[0].quoteNumber
+      ? Number.parseInt(
+          existingQuoteRows[0].quoteNumber.split('-')[2] ?? '0',
+          10,
+        ) + 1
+      : 1
+  const quoteNumber = `${quotePrefix}${String(nextNum).padStart(3, '0')}`
+
+  const validUntil = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+
   await db.insert(ordersTable).values({
     id: orderId,
     orgId,
@@ -187,6 +216,8 @@ export async function createDraftOrder(
     status: 'draft',
     notes: input.notes ?? null,
     total: orderTotal,
+    quoteNumber,
+    validUntil,
     createdAt: now,
     updatedAt: now,
   })
@@ -203,6 +234,8 @@ export async function createDraftOrder(
       status: 'draft',
       notes: input.notes ?? null,
       total: orderTotal,
+      quoteNumber,
+      validUntil,
       createdAt: now,
       updatedAt: now,
     },

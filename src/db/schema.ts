@@ -68,6 +68,31 @@ export const organization = pgTable('organization', {
   updatedAt: timestamp('updated_at'),
 })
 
+export const biteshipAreas = pgTable('biteship_areas', {
+  areaId: text('area_id').primaryKey(),
+  name: text('name').notNull(),
+  subdistrict: text('subdistrict').notNull(),
+  district: text('district').notNull(),
+  city: text('city').notNull(),
+  province: text('province').notNull(),
+  postalCode: text('postal_code').notNull(),
+})
+
+export const addresses = pgTable('addresses', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id')
+    .notNull()
+    .references(() => organization.id, { onDelete: 'cascade' }),
+  areaId: text('area_id').references(() => biteshipAreas.areaId, {
+    onDelete: 'no action',
+  }),
+  areaName: text('area_name'),
+  streetAddress: text('street_address'),
+  isDefault: boolean('is_default').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
 export const member = pgTable('member', {
   id: text('id').primaryKey(),
   organizationId: text('organization_id')
@@ -107,6 +132,10 @@ export const customers = pgTable('customers', {
   address: text('address'),
   notes: text('notes'),
   active: boolean('active').notNull().default(true),
+  addressId: text('address_id').references(() => addresses.id, {
+    onDelete: 'set null',
+  }),
+  isWni: boolean('is_wni').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
@@ -156,6 +185,21 @@ export const pricingBreakpoints = pgTable('pricing_breakpoints', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
+export const organizationProfiles = pgTable('organization_profiles', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id')
+    .notNull()
+    .unique()
+    .references(() => organization.id, { onDelete: 'cascade' }),
+  displayName: text('display_name'),
+  phone: text('phone'),
+  logoAssetId: text('logo_asset_id').references(() => assets.id, {
+    onDelete: 'set null',
+  }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
 export const orders = pgTable('orders', {
   id: text('id').primaryKey(),
   orgId: text('org_id')
@@ -167,6 +211,9 @@ export const orders = pgTable('orders', {
   status: text('status').notNull().default('draft'),
   notes: text('notes'),
   total: real('total').notNull().default(0),
+  quoteNumber: text('quote_number'),
+  validUntil: timestamp('valid_until'),
+  shippingAddress: json('shipping_address'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

@@ -225,6 +225,22 @@ const id: Messages = {
       maxSize: 'Maks {size}',
     },
   },
+  address: {
+    title: 'Alamat',
+    areaSearch: 'Cari area...',
+    areaSearchPlaceholder: 'Cari kecamatan, kota, atau kode pos',
+    noResults: 'Area tidak ditemukan',
+    streetAddress: 'Alamat Jalan',
+    streetAddressPlaceholder: 'cth. Jl. Raya Bogor No. 123',
+    saveAsCustomerAddress: 'Simpan sebagai alamat pelanggan',
+    isWni: 'Warga Negara Indonesia (WNI)',
+    isWna: 'Warga Negara Asing (WNA)',
+    areaNotSupported:
+      'Perhitungan pengiriman tidak tersedia untuk pelanggan WNA',
+    orgAddressRequired: 'Silakan atur alamat organisasi Anda untuk melanjutkan',
+    areaNotFound: 'Area tidak ditemukan. Mohon periksa nama area.',
+    defaultAddress: 'Alamat default',
+  },
 }
 
 export default id

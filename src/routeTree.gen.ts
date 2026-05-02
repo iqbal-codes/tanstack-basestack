@@ -22,6 +22,7 @@ import { Route as OrgProductsNewRouteImport } from './routes/_org/products/new'
 import { Route as OrgOrdersNewRouteImport } from './routes/_org/orders/new'
 import { Route as OrgCustomersNewRouteImport } from './routes/_org/customers/new'
 import { Route as OrgCustomersIdEditRouteImport } from './routes/_org/customers/$id/edit'
+import { Route as ApiDocumentsOrdersIdQuotationRouteImport } from './routes/api/documents/orders/$id/quotation'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -87,6 +88,12 @@ const OrgCustomersIdEditRoute = OrgCustomersIdEditRouteImport.update({
   path: '/customers/$id/edit',
   getParentRoute: () => OrgRoute,
 } as any)
+const ApiDocumentsOrdersIdQuotationRoute =
+  ApiDocumentsOrdersIdQuotationRouteImport.update({
+    id: '/api/documents/orders/$id/quotation',
+    path: '/api/documents/orders/$id/quotation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof OrgIndexRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/orders/': typeof OrgOrdersIndexRoute
   '/products/': typeof OrgProductsIndexRoute
   '/customers/$id/edit': typeof OrgCustomersIdEditRoute
+  '/api/documents/orders/$id/quotation': typeof ApiDocumentsOrdersIdQuotationRoute
 }
 export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
@@ -115,6 +123,7 @@ export interface FileRoutesByTo {
   '/orders': typeof OrgOrdersIndexRoute
   '/products': typeof OrgProductsIndexRoute
   '/customers/$id/edit': typeof OrgCustomersIdEditRoute
+  '/api/documents/orders/$id/quotation': typeof ApiDocumentsOrdersIdQuotationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +140,7 @@ export interface FileRoutesById {
   '/_org/orders/': typeof OrgOrdersIndexRoute
   '/_org/products/': typeof OrgProductsIndexRoute
   '/_org/customers/$id/edit': typeof OrgCustomersIdEditRoute
+  '/api/documents/orders/$id/quotation': typeof ApiDocumentsOrdersIdQuotationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/orders/'
     | '/products/'
     | '/customers/$id/edit'
+    | '/api/documents/orders/$id/quotation'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/onboarding'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/products'
     | '/customers/$id/edit'
+    | '/api/documents/orders/$id/quotation'
   id:
     | '__root__'
     | '/_org'
@@ -176,6 +188,7 @@ export interface FileRouteTypes {
     | '/_org/orders/'
     | '/_org/products/'
     | '/_org/customers/$id/edit'
+    | '/api/documents/orders/$id/quotation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +197,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiDocumentsOrdersIdQuotationRoute: typeof ApiDocumentsOrdersIdQuotationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -279,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgCustomersIdEditRouteImport
       parentRoute: typeof OrgRoute
     }
+    '/api/documents/orders/$id/quotation': {
+      id: '/api/documents/orders/$id/quotation'
+      path: '/api/documents/orders/$id/quotation'
+      fullPath: '/api/documents/orders/$id/quotation'
+      preLoaderRoute: typeof ApiDocumentsOrdersIdQuotationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -312,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiDocumentsOrdersIdQuotationRoute: ApiDocumentsOrdersIdQuotationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
