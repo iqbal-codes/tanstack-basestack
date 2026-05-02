@@ -25,6 +25,35 @@ export type Messages = {
     title: string
     retry: string
   }
+  assetUpload: {
+    dropzone: {
+      title: string
+      hint: string
+    }
+    actions: {
+      browse: string
+      remove: string
+      retry: string
+      undo: string
+    }
+    states: {
+      uploading: string
+      processing: string
+      failed: string
+      done: string
+    }
+    errors: {
+      tooLarge: string
+      wrongType: string
+      uploadFailed: string
+      limitReached: string
+      serverError: string
+    }
+    hints: {
+      acceptedFormats: string
+      maxSize: string
+    }
+  }
   common: {
     loading: string
     pageNotFound: string
@@ -220,6 +249,35 @@ const en: Messages = {
   app: {
     title: 'Admin Console',
     retry: 'Retry',
+  },
+  assetUpload: {
+    dropzone: {
+      title: 'Drop files here',
+      hint: 'or click to browse',
+    },
+    actions: {
+      browse: 'Browse files',
+      remove: 'Remove',
+      retry: 'Retry',
+      undo: 'Undo',
+    },
+    states: {
+      uploading: 'Uploading...',
+      processing: 'Processing...',
+      failed: 'Failed',
+      done: 'Done',
+    },
+    errors: {
+      tooLarge: 'File is too large',
+      wrongType: 'File type not supported',
+      uploadFailed: 'Upload failed',
+      limitReached: 'Maximum files reached',
+      serverError: 'Server error',
+    },
+    hints: {
+      acceptedFormats: 'PNG, JPG, WebP up to {size}',
+      maxSize: 'Max {size}',
+    },
   },
   common: {
     loading: 'Loading',

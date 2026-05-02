@@ -196,6 +196,35 @@ const id: Messages = {
     addLineItem: 'Tambah Item',
     removeLineItem: 'Hapus',
   },
+  assetUpload: {
+    dropzone: {
+      title: 'Seret file ke sini',
+      hint: 'atau klik untuk memilih',
+    },
+    actions: {
+      browse: 'Pilih file',
+      remove: 'Hapus',
+      retry: 'Coba lagi',
+      undo: 'Batalkan',
+    },
+    states: {
+      uploading: 'Mengunggah...',
+      processing: 'Memproses...',
+      failed: 'Gagal',
+      done: 'Selesai',
+    },
+    errors: {
+      tooLarge: 'File terlalu besar',
+      wrongType: 'Jenis file tidak didukung',
+      uploadFailed: 'Unggah gagal',
+      limitReached: 'Jumlah file maksimum tercapai',
+      serverError: 'Kesalahan server',
+    },
+    hints: {
+      acceptedFormats: 'PNG, JPG, WebP hingga {size}',
+      maxSize: 'Maks {size}',
+    },
+  },
 }
 
 export default id

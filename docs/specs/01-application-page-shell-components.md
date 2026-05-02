@@ -60,21 +60,21 @@ Feature code owns:
 Workspace routes provide page metadata through route context.
 
 ```ts
-import type { LucideIcon } from 'lucide-react'
+import type { LucideIcon } from "lucide-react";
 
 type PageAction = {
-  label: string
-  icon?: LucideIcon
-  href?: string
-  onClick?: () => void
-}
+  label: string;
+  icon?: LucideIcon;
+  href?: string;
+  onClick?: () => void;
+};
 
 type PageMeta = {
-  breadcrumb: string
-  pageTitle: string
-  primaryAction?: PageAction
-  secondaryActions?: PageAction[]
-}
+  breadcrumb: string;
+  pageTitle: string;
+  primaryAction?: PageAction;
+  secondaryActions?: PageAction[];
+};
 ```
 
 Rules:
@@ -161,12 +161,12 @@ Target API:
 
 ```tsx
 <PageHeader
-  title={t('orders.title')}
-  description={t('orders.description')}
-  primaryAction={{ label: t('orders.new'), icon: Plus, href: '/orders/new' }}
+  title={t("orders.title")}
+  description={t("orders.description")}
+  primaryAction={{ label: t("orders.new"), icon: Plus, href: "/orders/new" }}
   secondaryActions={[
-    { label: t('orders.import'), icon: Upload, href: '/orders/import' },
-    { label: t('orders.export'), icon: Download },
+    { label: t("orders.import"), icon: Upload, href: "/orders/import" },
+    { label: t("orders.export"), icon: Download },
   ]}
 />
 ```
@@ -191,7 +191,7 @@ Responsibilities:
 Default class behavior:
 
 - `mx-auto`
-- `max-w-7xl`
+- `max-w-5xl`
 - `px-4 md:px-6`
 - `py-6`
 - `space-y-6`
@@ -219,9 +219,9 @@ Target API:
 ```tsx
 <EmptyState
   icon={ShoppingCart}
-  title={t('orders.emptyTitle')}
-  description={t('orders.emptyDescription')}
-  action={{ label: t('orders.new'), href: '/orders/new' }}
+  title={t("orders.emptyTitle")}
+  description={t("orders.emptyDescription")}
+  action={{ label: t("orders.new"), href: "/orders/new" }}
 />
 ```
 
@@ -260,7 +260,7 @@ All page shell labels must be passed as already-translated strings.
 Do this:
 
 ```tsx
-<PageHeader title={t('orders.title')} />
+<PageHeader title={t("orders.title")} />
 ```
 
 Do not do this:
@@ -342,7 +342,7 @@ Cover:
 - Breadcrumbs hidden on mobile classes.
 - `PageHeader` renders title, description, primary action, and secondary action menu.
 - `PageHeader` uses desktop-only visibility classes.
-- `PageContent` applies `max-w-7xl`, horizontal padding, and spacing defaults.
+- `PageContent` applies `max-w-5xl`, horizontal padding, and spacing defaults.
 - `EmptyState` renders icon, title, description, and optional action.
 - Mobile shared header renders current page title and actions from route metadata after `_org.tsx` integration.
 

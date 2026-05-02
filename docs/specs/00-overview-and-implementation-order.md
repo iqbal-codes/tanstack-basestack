@@ -28,6 +28,7 @@ Reusable application components come first because feature slices depend on cons
 | 13 | Invoices and manual payments | #10 |
 | 14 | Dashboard, members, settings, activity | #11, #12, #13 |
 | 15 | Testing strategy | Cross-cutting acceptance for #2-#13 |
+| 16 | Reusable asset upload components and R2 pipeline | Cross-cutting reusable upload foundation |
 
 ## Dependency Rules
 
@@ -50,7 +51,7 @@ These issues still need maintainer triage labels beyond `needs-triage` before AF
 
 - Stripe, card payments, webhooks, refunds, and automatic reconciliation.
 - Redis queues and background workers.
-- S3/R2 file storage unless a concrete customer requirement form needs uploads.
+- Video transcoding, resumable uploads, and advanced media processing pipelines.
 - External REST API, API keys, OpenAPI, and third-party webhook dispatch.
 - Generic ERP modules such as inventory, procurement, payroll, advanced CRM, shipping carrier integration, or machine scheduling.
 - Drag-and-drop kanban interactions.

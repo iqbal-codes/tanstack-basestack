@@ -20,6 +20,9 @@
 | **Server function** | TanStack Start `createServerFn` — type-safe RPC, called from router or client. |
 | **Application Component** | Project-wide reusable UI composition used across internal workspace and public flows. Built from shadcn/ui primitives and TanStack libraries; must not assume authentication, organization membership, or a specific route context. |
 | **Application Data Table** | Application Component for workspace resource lists. Renders server-backed table/card views from feature-owned data, URL state, filters, permissions, and actions. |
+| **Asset** | Tenant-scoped uploaded media or document owned by a business entity (product, customer, organization, order, or production task). |
+| **Asset Usage** | Business intent of an Asset: `logo`, `profile`, `gallery`, or `attachment`. Governs limits and processing policy. |
+| **Asset Variant** | A delivery form of an Asset (`preview`, `full`, `original`) selected based on display or document need. |
 | **Apex** | The root domain (`pabriq.com`, `localhost:3000`). Sign-in, sign-up, org management. No org context. |
 
 ## Architecture

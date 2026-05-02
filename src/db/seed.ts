@@ -194,4 +194,36 @@ export const ddl = [
     details TEXT DEFAULT '{}',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`,
+  `CREATE TABLE IF NOT EXISTS "assets" (
+    id TEXT PRIMARY KEY,
+    org_id TEXT NOT NULL REFERENCES "organization"(id) ON DELETE CASCADE,
+    owner_type TEXT NOT NULL,
+    owner_id TEXT NOT NULL,
+    draft_id TEXT,
+    usage TEXT NOT NULL,
+    asset_kind TEXT NOT NULL,
+    original_filename TEXT NOT NULL,
+    mime_type TEXT NOT NULL,
+    size_bytes INTEGER NOT NULL,
+    uploaded_by_user_id TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    checksum_sha256 TEXT,
+    image_width INTEGER,
+    image_height INTEGER,
+    video_duration_seconds INTEGER,
+    deleted_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE TABLE IF NOT EXISTS "asset_variants" (
+    id TEXT PRIMARY KEY,
+    asset_id TEXT NOT NULL REFERENCES "assets"(id) ON DELETE CASCADE,
+    variant_key TEXT NOT NULL,
+    storage_key TEXT NOT NULL,
+    mime_type TEXT NOT NULL,
+    size_bytes INTEGER NOT NULL,
+    width INTEGER,
+    height INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
 ]

@@ -8,6 +8,7 @@ import {
 } from '#/components/app/form/form-layout'
 import { PageContent } from '#/components/app/page-shell/page-content'
 import { PageHeader } from '#/components/app/page-shell/page-header'
+import { Separator } from '#/components/ui/separator'
 import { createProductFn } from '#/features/products/server'
 
 export const Route = createFileRoute('/_org/products/new')({
@@ -36,10 +37,16 @@ function NewProductPage() {
 
   return (
     <PageContent>
-      <PageHeader title={t('createTitle')} />
+      <PageHeader
+        title={t('createTitle')}
+        primaryAction={{
+          label: t('createProduct'),
+          onClick: () => form.handleSubmit(),
+        }}
+      />
       <FormRoot form={form}>
-        <FormSection title={t('name')}>
-          <FormGrid>
+        <FormSection title={'Product Information'}>
+          <FormGrid columns={1}>
             <form.AppField name="name">
               {(field) => (
                 <field.TextField
@@ -58,9 +65,9 @@ function NewProductPage() {
             </form.AppField>
           </FormGrid>
         </FormSection>
-
+        <Separator />
         <FormSection title={t('productionNotes')}>
-          <FormGrid>
+          <FormGrid columns={1}>
             <form.AppField name="productionNotes">
               {(field) => (
                 <field.TextareaField
@@ -71,10 +78,6 @@ function NewProductPage() {
             </form.AppField>
           </FormGrid>
         </FormSection>
-
-        <form.AppForm>
-          <form.SubmitButton>{t('createProduct')}</form.SubmitButton>
-        </form.AppForm>
       </FormRoot>
     </PageContent>
   )

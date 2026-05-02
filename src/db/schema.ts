@@ -293,3 +293,41 @@ export const activityEvents = pgTable('activity_events', {
   details: json('details').$type<Record<string, unknown>>().default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
+
+export const assets = pgTable('assets', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id')
+    .notNull()
+    .references(() => organization.id, { onDelete: 'cascade' }),
+  ownerType: text('owner_type').notNull(),
+  ownerId: text('owner_id'),
+  draftId: text('draft_id'),
+  usage: text('usage').notNull(),
+  assetKind: text('asset_kind').notNull(),
+  originalFilename: text('original_filename').notNull(),
+  mimeType: text('mime_type').notNull(),
+  sizeBytes: integer('size_bytes').notNull(),
+  uploadedByUserId: text('uploaded_by_user_id').notNull(),
+  status: text('status').notNull().default('pending'),
+  checksumSha256: text('checksum_sha256'),
+  imageWidth: integer('image_width'),
+  imageHeight: integer('image_height'),
+  videoDurationSeconds: integer('video_duration_seconds'),
+  deletedAt: timestamp('deleted_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
+export const assetVariants = pgTable('asset_variants', {
+  id: text('id').primaryKey(),
+  assetId: text('asset_id')
+    .notNull()
+    .references(() => assets.id, { onDelete: 'cascade' }),
+  variantKey: text('variant_key').notNull(),
+  storageKey: text('storage_key').notNull(),
+  mimeType: text('mime_type').notNull(),
+  sizeBytes: integer('size_bytes').notNull(),
+  width: integer('width'),
+  height: integer('height'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
