@@ -62,7 +62,9 @@ export const organization = pgTable('organization', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
-  logo: text('logo'),
+  logoAssetId: text('logo_asset_id').references(() => assets.id, {
+    onDelete: 'set null',
+  }),
   metadata: text('metadata'),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
