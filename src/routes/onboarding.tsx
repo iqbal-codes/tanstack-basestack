@@ -2,6 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'use-intl'
+import {
+  createR2UploaderAdapter,
+  getAcceptedMimeTypes,
+  getMaxBytes,
+  PhotoGridUpload,
+  useUploadMachine,
+} from '#/components/app/asset-upload'
 import { useAppForm } from '#/components/app/form'
 import {
   Card,
@@ -10,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from '#/components/ui/card'
+import type { UploadItem } from '#/features/assets/upload-machine'
 import { createOrganization, listUserOrgs } from '#/features/auth/org'
 import { getCurrentSession } from '#/lib/auth-session'
 
@@ -29,6 +37,9 @@ export const Route = createFileRoute('/onboarding')({
   component: OnboardingPage,
 })
 
+const ACCEPTED_LOGO_MIMES = getAcceptedMimeTypes('logo')
+const MAX_LOGO_BYTES = getMaxBytes('logo')
+
 function OnboardingPage() {
   const t = useTranslations('org')
   const ct = useTranslations('common')
@@ -45,13 +56,35 @@ function OnboardingPage() {
   }, [orgs, navigate])
 
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [uploadedLogoAssetId, setUploadedLogoAssetId] = useState<string | null>(
+    null,
+  )
+  const [uploadItems, setUploadItems] = useState<UploadItem[]>([])
+
+  const adapter = createR2UploaderAdapter({
+    ownerType: 'organization',
+    usage: 'logo',
+  })
+
+  const machine = useUploadMachine(uploadItems, {
+    adapter,
+    onUploadComplete: (assetId) => {
+      setUploadedLogoAssetId(assetId)
+    },
+    onUploadError: () => {},
+  })
 
   const form = useAppForm({
     defaultValues: { name: '' },
     onSubmit: async ({ value }) => {
       setSubmitError(null)
 
-      const result = await createOrganization({ data: { name: value.name } })
+      const result = await createOrganization({
+        data: {
+          name: value.name,
+          logoAssetId: uploadedLogoAssetId ?? undefined,
+        },
+      })
 
       if (!result.ok) {
         const key = ERROR_MAP[result.error as keyof typeof ERROR_MAP]
@@ -94,6 +127,26 @@ function OnboardingPage() {
               form.handleSubmit()
             }}
           >
+            <div className="mb-6">
+              <p className="text-sm font-medium mb-2">{t('logoPhoto')}</p>
+              <PhotoGridUpload
+                items={machine.items}
+                onItemsChange={(items) => setUploadItems(items)}
+                config={{
+                  ownerType: 'organization',
+                  usage: 'logo',
+                  maxFiles: 1,
+                }}
+                adapter={adapter}
+                acceptedMimeTypes={ACCEPTED_LOGO_MIMES}
+                maxBytes={MAX_LOGO_BYTES}
+                onUploadComplete={(assetId) => setUploadedLogoAssetId(assetId)}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('logoPhotoHint')}
+              </p>
+            </div>
+
             <form.AppField
               name="name"
               validators={{

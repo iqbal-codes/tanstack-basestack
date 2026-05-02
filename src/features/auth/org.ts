@@ -16,7 +16,7 @@ export const listUserOrgs = createServerFn({ method: 'GET' }).handler(
         id: organizationTable.id,
         name: organizationTable.name,
         slug: organizationTable.slug,
-        logo: organizationTable.logo,
+        logo: organizationTable.logoAssetId,
       })
       .from(member)
       .innerJoin(
@@ -25,7 +25,15 @@ export const listUserOrgs = createServerFn({ method: 'GET' }).handler(
       )
       .where(eq(member.userId, session.user.id))
 
-    return memberships
+    return memberships.map(
+      (m) =>
+        ({
+          id: m.id,
+          name: m.name,
+          slug: m.slug,
+          logo: (m as unknown as { logoAssetId: string | null }).logoAssetId,
+        }) as typeof m,
+    )
   },
 )
 
@@ -45,7 +53,7 @@ function randomSuffix() {
 type CreateOrgResult = { ok: true } | { ok: false; error: string }
 
 export const createOrganization = createServerFn({ method: 'POST' })
-  .inputValidator((input: { name: string }) => input)
+  .inputValidator((input: { name: string; logoAssetId?: string }) => input)
   .handler(async ({ data }): Promise<CreateOrgResult> => {
     const auth = await import('#/lib/auth').then((m) => m.auth)
     const headers = getRequestHeaders()
@@ -61,6 +69,22 @@ export const createOrganization = createServerFn({ method: 'POST' })
           headers,
           body: { name: trimmed, slug: trySlug },
         })
+
+        if (data.logoAssetId) {
+          const orgs = await db
+            .select({ id: organizationTable.id })
+            .from(organizationTable)
+            .where(eq(organizationTable.slug, trySlug))
+            .limit(1)
+
+          if (orgs[0]) {
+            await db
+              .update(organizationTable)
+              .set({ logoAssetId: data.logoAssetId })
+              .where(eq(organizationTable.id, orgs[0].id))
+          }
+        }
+
         return { ok: true }
       } catch (err: unknown) {
         const msg =

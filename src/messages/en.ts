@@ -138,6 +138,8 @@ export type Messages = {
     creationFailed: string
     taken: string
     redirecting: string
+    logoPhoto: string
+    logoPhotoHint: string
   }
   sidebar: {
     dashboard: string
@@ -379,6 +381,8 @@ const en: Messages = {
     creationFailed: 'Failed to create organization',
     taken: 'That name is taken. Please try a different organization name.',
     redirecting: 'Redirecting...',
+    logoPhoto: 'Organization Photo',
+    logoPhotoHint: 'PNG, JPG, or WebP up to 5MB',
   },
   sidebar: {
     dashboard: 'Dashboard',

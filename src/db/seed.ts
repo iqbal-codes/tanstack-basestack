@@ -45,7 +45,7 @@ export const ddl = [
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
-    logo TEXT,
+    logo_asset_id TEXT REFERENCES assets(id) ON DELETE SET NULL,
     metadata TEXT,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
