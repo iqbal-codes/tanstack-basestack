@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { User, Users } from 'lucide-react'
+import { Users } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useTranslations } from 'use-intl'
+import { AssetImage } from '#/components/app/asset-image'
 import type { AppColumnDef, DataTableLabels } from '#/components/app/data-table'
 import { DataTable, DataTableSearch } from '#/components/app/data-table'
 import { PageContent } from '#/components/app/page-shell/page-content'
@@ -43,10 +44,11 @@ function CustomersList() {
       id: 'photo',
       header: '',
       size: 48,
-      cell: () => (
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-          <User className="h-5 w-5 text-muted-foreground" />
-        </div>
+      cell: ({ row }) => (
+        <AssetImage
+          assetId={row.original.photoAssetId}
+          className="rounded-full"
+        />
       ),
     },
     {
