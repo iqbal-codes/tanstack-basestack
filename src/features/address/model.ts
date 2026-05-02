@@ -47,7 +47,7 @@ export function validateAddressInput(input: AddressInput): string | null {
 
 export async function createAddressFn(
   input: AddressInput,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<{ ok: true; addressId: string } | { ok: false; error: string }> {
   const validationError = validateAddressInput(input)
   if (validationError) {
     return { ok: false, error: validationError }
@@ -64,8 +64,9 @@ export async function createAddressFn(
       )
   }
 
+  const addressId = crypto.randomUUID()
   await db.insert(addresses).values({
-    id: crypto.randomUUID(),
+    id: addressId,
     orgId: input.orgId,
     areaId: input.areaId ?? null,
     areaName: input.areaName ?? null,
@@ -73,7 +74,7 @@ export async function createAddressFn(
     isDefault: shouldSetDefault,
   })
 
-  return { ok: true }
+  return { ok: true, addressId }
 }
 
 export async function updateAddressFn(
