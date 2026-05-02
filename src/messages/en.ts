@@ -206,6 +206,11 @@ export type Messages = {
     updated: string
     deleted: string
     deleteConfirm: string
+    basePrice: string
+    productionDays: string
+    minQuantity: string
+    maxQuantity: string
+    noPhoto: string
     variant: {
       title: string
       name: string
@@ -450,6 +455,11 @@ const en: Messages = {
     updated: 'Product updated successfully',
     deleted: 'Product deleted',
     deleteConfirm: 'Are you sure you want to delete this product?',
+    basePrice: 'Base Price',
+    productionDays: 'Production Days',
+    minQuantity: 'Min. Quantity',
+    maxQuantity: 'Max. Quantity',
+    noPhoto: 'No photo',
     variant: {
       title: 'Variants',
       name: 'Variant Name',

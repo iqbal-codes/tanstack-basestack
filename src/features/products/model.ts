@@ -13,6 +13,11 @@ export type Product = {
   description: string | null
   active: boolean
   productionNotes: string | null
+  primaryImageAssetId: string | null
+  basePrice: number
+  productionDays: number
+  minQuantity: number
+  maxQuantity: number | null
   createdAt: Date
   updatedAt: Date
 }
@@ -22,6 +27,11 @@ export type CreateProductInput = {
   name: string
   description?: string
   productionNotes?: string
+  primaryImageAssetId?: string
+  basePrice?: number
+  productionDays?: number
+  minQuantity?: number
+  maxQuantity?: number
 }
 
 export type UpdateProductInput = {
@@ -30,6 +40,11 @@ export type UpdateProductInput = {
   name?: string
   description?: string | null
   productionNotes?: string | null
+  primaryImageAssetId?: string | null
+  basePrice?: number
+  productionDays?: number
+  minQuantity?: number
+  maxQuantity?: number | null
   active?: boolean
 }
 
@@ -56,6 +71,11 @@ export async function createProduct(
     name: input.name,
     description: input.description ?? null,
     productionNotes: input.productionNotes ?? null,
+    primaryImageAssetId: input.primaryImageAssetId ?? null,
+    basePrice: input.basePrice ?? 0,
+    productionDays: input.productionDays ?? 1,
+    minQuantity: input.minQuantity ?? 1,
+    maxQuantity: input.maxQuantity ?? null,
     active: true,
     createdAt: now,
     updatedAt: now,
@@ -79,6 +99,13 @@ export async function updateProduct(
   if (input.description !== undefined) updates.description = input.description
   if (input.productionNotes !== undefined)
     updates.productionNotes = input.productionNotes
+  if (input.primaryImageAssetId !== undefined)
+    updates.primaryImageAssetId = input.primaryImageAssetId
+  if (input.basePrice !== undefined) updates.basePrice = input.basePrice
+  if (input.productionDays !== undefined)
+    updates.productionDays = input.productionDays
+  if (input.minQuantity !== undefined) updates.minQuantity = input.minQuantity
+  if (input.maxQuantity !== undefined) updates.maxQuantity = input.maxQuantity
   if (input.active !== undefined) updates.active = input.active
 
   await db

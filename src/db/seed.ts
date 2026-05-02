@@ -45,7 +45,7 @@ export const ddl = [
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
-    logo_asset_id TEXT REFERENCES assets(id) ON DELETE SET NULL,
+    logo_asset_id TEXT,
     metadata TEXT,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -150,6 +150,11 @@ export const ddl = [
     description TEXT,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     production_notes TEXT,
+    primary_image_asset_id TEXT REFERENCES "assets"(id) ON DELETE SET NULL,
+    base_price INTEGER NOT NULL DEFAULT 0,
+    production_days INTEGER NOT NULL DEFAULT 1,
+    min_quantity INTEGER NOT NULL DEFAULT 1,
+    max_quantity INTEGER,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`,

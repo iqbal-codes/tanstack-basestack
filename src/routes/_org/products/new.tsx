@@ -28,6 +28,10 @@ function NewProductPage() {
       name: '',
       description: '',
       productionNotes: '',
+      basePrice: 0,
+      productionDays: 1,
+      minQuantity: 1,
+      maxQuantity: undefined as number | undefined,
     },
     onSubmit: async ({ value }) => {
       await createProductFn({ data: value })
@@ -75,6 +79,23 @@ function NewProductPage() {
                   placeholder={t('productionNotesPlaceholder')}
                 />
               )}
+            </form.AppField>
+          </FormGrid>
+        </FormSection>
+        <Separator />
+        <FormSection title={'Pricing & Orders'}>
+          <FormGrid columns={2}>
+            <form.AppField name="basePrice">
+              {(field) => <field.NumberField label={t('basePrice')} />}
+            </form.AppField>
+            <form.AppField name="productionDays">
+              {(field) => <field.NumberField label={t('productionDays')} />}
+            </form.AppField>
+            <form.AppField name="minQuantity">
+              {(field) => <field.NumberField label={t('minQuantity')} />}
+            </form.AppField>
+            <form.AppField name="maxQuantity">
+              {(field) => <field.NumberField label={t('maxQuantity')} />}
             </form.AppField>
           </FormGrid>
         </FormSection>

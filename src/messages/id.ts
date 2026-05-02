@@ -210,6 +210,11 @@ const id: Messages = {
     updated: 'Produk berhasil diperbarui',
     deleted: 'Produk dihapus',
     deleteConfirm: 'Anda yakin ingin menghapus produk ini?',
+    basePrice: 'Harga Dasar',
+    productionDays: 'Hari Produksi',
+    minQuantity: 'Min. Kuantitas',
+    maxQuantity: 'Maks. Kuantitas',
+    noPhoto: 'Tanpa foto',
     variant: {
       title: 'Varian',
       name: 'Nama Varian',

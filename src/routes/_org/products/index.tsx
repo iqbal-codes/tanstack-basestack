@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Package } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useTranslations } from 'use-intl'
+import { AssetImage } from '#/components/app/asset-image'
 import type { AppColumnDef, DataTableLabels } from '#/components/app/data-table'
 import { DataTable, DataTableSearch } from '#/components/app/data-table'
 import { PageContent } from '#/components/app/page-shell/page-content'
@@ -43,6 +44,14 @@ function ProductsList() {
 
   const columns: AppColumnDef<ListProductsResult['rows'][number]>[] = [
     {
+      accessorKey: 'primaryImageAssetId',
+      header: t('noPhoto'),
+      meta: { label: t('noPhoto'), mobileRole: 'meta' },
+      cell: ({ row }) => (
+        <AssetImage assetId={row.original.primaryImageAssetId} />
+      ),
+    },
+    {
       accessorKey: 'name',
       header: t('name'),
       meta: { label: t('name'), mobileRole: 'title' },
@@ -52,6 +61,28 @@ function ProductsList() {
       header: t('description'),
       meta: { label: t('description'), mobileRole: 'meta' },
       cell: ({ row }) => row.original.description ?? '—',
+    },
+    {
+      accessorKey: 'basePrice',
+      header: t('basePrice'),
+      meta: { label: t('basePrice'), mobileRole: 'meta' },
+      cell: ({ row }) => {
+        const { basePrice, minDiscountPrice } = row.original
+        if (minDiscountPrice != null) {
+          const fmt = (n: number) =>
+            new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR',
+              minimumFractionDigits: 0,
+            }).format(n)
+          return `${fmt(minDiscountPrice)} ~ ${fmt(basePrice)}`
+        }
+        return new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          minimumFractionDigits: 0,
+        }).format(basePrice)
+      },
     },
     {
       accessorKey: 'active',

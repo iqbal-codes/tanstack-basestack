@@ -2,7 +2,10 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { and, desc, eq, ilike, type SQL, sql } from 'drizzle-orm'
 import { db } from '#/db/index'
-import { products as productsTable } from '#/db/schema'
+import {
+  pricingBreakpoints as breakpointsTable,
+  products as productsTable,
+} from '#/db/schema'
 import {
   type CreateProductInput,
   createProduct,
@@ -17,6 +20,12 @@ export type ProductRow = {
   name: string
   description: string | null
   active: boolean
+  primaryImageAssetId: string | null
+  basePrice: number
+  productionDays: number
+  minQuantity: number
+  maxQuantity: number | null
+  minDiscountPrice: number | null
 }
 
 export type ListProductsResult = {
@@ -61,6 +70,16 @@ export const listProductsFn = createServerFn({ method: 'GET' })
         name: productsTable.name,
         description: productsTable.description,
         active: productsTable.active,
+        primaryImageAssetId: productsTable.primaryImageAssetId,
+        basePrice: productsTable.basePrice,
+        productionDays: productsTable.productionDays,
+        minQuantity: productsTable.minQuantity,
+        maxQuantity: productsTable.maxQuantity,
+        minDiscountPrice: sql<number | null>`(
+          SELECT MIN(b.unit_price)
+          FROM ${breakpointsTable} b
+          WHERE b.product_id = ${productsTable.id}
+        )`,
       })
       .from(productsTable)
       .where(allConditions)

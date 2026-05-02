@@ -154,6 +154,14 @@ export const products = pgTable('products', {
   description: text('description'),
   active: boolean('active').notNull().default(true),
   productionNotes: text('production_notes'),
+  primaryImageAssetId: text('primary_image_asset_id').references(
+    () => assets.id,
+    { onDelete: 'set null' },
+  ),
+  basePrice: integer('base_price').notNull().default(0),
+  productionDays: integer('production_days').notNull().default(1),
+  minQuantity: integer('min_quantity').notNull().default(1),
+  maxQuantity: integer('max_quantity'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
