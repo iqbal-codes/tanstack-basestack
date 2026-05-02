@@ -139,6 +139,7 @@ export const ddl = [
     active BOOLEAN NOT NULL DEFAULT TRUE,
     address_id TEXT REFERENCES "addresses"(id) ON DELETE SET NULL,
     is_wni BOOLEAN NOT NULL DEFAULT TRUE,
+    photo_asset_id TEXT REFERENCES "assets"(id) ON DELETE SET NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`,

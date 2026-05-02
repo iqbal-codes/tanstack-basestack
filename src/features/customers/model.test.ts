@@ -20,10 +20,8 @@ describe('validateCustomerInput', () => {
   it('returns null for valid input with all optional fields', () => {
     const input: CustomerInput = {
       name: 'PT Maju Jaya',
-      businessName: 'Maju Jaya Corp',
       email: 'maju@jaya.com',
       phone: '081234567890',
-      address: 'Jl. Sudirman No. 123',
       notes: 'Prefers morning delivery',
       active: true,
     }
@@ -33,10 +31,8 @@ describe('validateCustomerInput', () => {
   it('allows null optional fields', () => {
     const input: CustomerInput = {
       name: 'Test',
-      businessName: null,
       email: null,
       phone: null,
-      address: null,
       notes: null,
     }
     expect(validateCustomerInput(input)).toBeNull()

@@ -155,10 +155,8 @@ export type Messages = {
     createCustomer: string
     editCustomer: string
     name: string
-    businessName: string
     email: string
     phone: string
-    address: string
     notes: string
     active: string
     inactive: string
@@ -173,6 +171,9 @@ export type Messages = {
     customerCreated: string
     customerUpdated: string
     nameRequired: string
+    photo: string
+    uploadPhoto: string
+    removePhoto: string
   }
   dashboard: {
     welcome: string
@@ -398,10 +399,8 @@ const en: Messages = {
     createCustomer: 'Create Customer',
     editCustomer: 'Edit Customer',
     name: 'Name',
-    businessName: 'Business Name',
     email: 'Email',
     phone: 'Phone',
-    address: 'Address / Delivery Notes',
     notes: 'Internal Notes',
     active: 'Active',
     inactive: 'Inactive',
@@ -416,6 +415,9 @@ const en: Messages = {
     customerCreated: 'Customer created successfully',
     customerUpdated: 'Customer updated successfully',
     nameRequired: 'Name is required',
+    photo: 'Photo',
+    uploadPhoto: 'Upload Photo',
+    removePhoto: 'Remove Photo',
   },
   dashboard: {
     welcome: 'Welcome to your Pabriq workspace',

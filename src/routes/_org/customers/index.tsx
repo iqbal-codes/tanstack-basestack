@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Users } from 'lucide-react'
+import { User, Users } from 'lucide-react'
 import { parseAsString, useQueryState } from 'nuqs'
 import { useTranslations } from 'use-intl'
 import type { AppColumnDef, DataTableLabels } from '#/components/app/data-table'
@@ -39,6 +39,16 @@ function CustomersList() {
   const st = useTranslations('status')
 
   const columns: AppColumnDef<CustomerRow>[] = [
+    {
+      id: 'photo',
+      header: '',
+      size: 48,
+      cell: () => (
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+          <User className="h-5 w-5 text-muted-foreground" />
+        </div>
+      ),
+    },
     {
       accessorKey: 'name',
       header: t('name'),

@@ -7,33 +7,31 @@ export type Customer = {
   id: string
   orgId: string
   name: string
-  businessName: string | null
   email: string | null
   phone: string | null
-  address: string | null
   notes: string | null
   active: boolean
+  photoAssetId: string | null
   createdAt: Date
   updatedAt: Date
 }
 
 export type CustomerInput = {
   name: string
-  businessName?: string | null
   email?: string | null
   phone?: string | null
-  address?: string | null
   notes?: string | null
   active?: boolean
+  photoAssetId?: string | null
 }
 
 export type CustomerRow = {
   id: string
   name: string
-  businessName: string | null
   email: string | null
   phone: string | null
   active: boolean
+  photoAssetId: string | null
 }
 
 export type ListCustomersResult = {
@@ -58,7 +56,6 @@ export const listCustomers = createServerFn({ method: 'GET' })
       conditions.push(
         or(
           ilike(customersTable.name, pattern),
-          ilike(customersTable.businessName, pattern),
           ilike(customersTable.email, pattern),
           ilike(customersTable.phone, pattern),
         ) as SQL,
@@ -71,10 +68,10 @@ export const listCustomers = createServerFn({ method: 'GET' })
       .select({
         id: customersTable.id,
         name: customersTable.name,
-        businessName: customersTable.businessName,
         email: customersTable.email,
         phone: customersTable.phone,
         active: customersTable.active,
+        photoAssetId: customersTable.photoAssetId,
       })
       .from(customersTable)
       .where(allConditions)
@@ -104,12 +101,11 @@ export const createCustomer = createServerFn({ method: 'POST' })
         id: crypto.randomUUID(),
         orgId: data.orgId,
         name: data.name.trim(),
-        businessName: data.businessName?.trim() ?? null,
         email: data.email?.trim() ?? null,
         phone: data.phone?.trim() ?? null,
-        address: data.address?.trim() ?? null,
         notes: data.notes?.trim() ?? null,
         active: data.active ?? true,
+        photoAssetId: data.photoAssetId ?? null,
       })
 
       return { ok: true }
@@ -131,12 +127,11 @@ export const updateCustomer = createServerFn({ method: 'POST' })
         .update(customersTable)
         .set({
           name: data.name.trim(),
-          businessName: data.businessName?.trim() ?? null,
           email: data.email?.trim() ?? null,
           phone: data.phone?.trim() ?? null,
-          address: data.address?.trim() ?? null,
           notes: data.notes?.trim() ?? null,
           active: data.active ?? true,
+          photoAssetId: data.photoAssetId ?? null,
           updatedAt: new Date(),
         })
         .where(

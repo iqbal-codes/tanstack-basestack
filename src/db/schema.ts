@@ -138,6 +138,9 @@ export const customers = pgTable('customers', {
     onDelete: 'set null',
   }),
   isWni: boolean('is_wni').notNull().default(true),
+  photoAssetId: text('photo_asset_id').references(() => assets.id, {
+    onDelete: 'set null',
+  }),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
