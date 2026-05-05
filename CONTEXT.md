@@ -2,62 +2,46 @@
 
 ## What this is
 
-A multi-tenant SaaS operations dashboard built on **TanStack Start** (React 19, Vite, file-based router). Organizations manage users, billing, and operational actions through a protected `/app` surface. Auth is email/password via **Better Auth** backed by **Neon Postgres** and **Drizzle ORM**.
+A **TanStack Start boilerplate** (React 19, Vite, file-based router) with auth, database, i18n, and full component system pre-configured. Use as a starting point for any new SaaS/internal tool project.
 
 ## Ubiquitous vocabulary
 
 | Term | Meaning |
 |---|---|
-| **Dashboard** | The `/app` surface — overview, billing, settings. Primary SaaS entry point after sign-in. |
-| **Admin** | Protected `/admin` routes for user management, system health, and operational actions. |
-| **Action** | A tracked operational task with status `Ready`, `Review`, or `Blocked`. Owned by a role. |
-| **User** | An authenticated person with a role (`Owner`, `Admin`, `Operator`) and status (`Active`, `Invited`, `Suspended`). |
-| **Better Auth** | The authentication layer. Manages `user`, `session`, `account`, and `verification` tables via Drizzle adapter. |
-| **Server function** | A TanStack Start `createServerFn` — called from the client via TanStack Query. |
-| **Store** | A TanStack Store holding client-side UI preferences (density, banner text). Not synced to server. |
-| **Collection** | A TanStack DB local-only collection mirroring operational data (e.g., admin actions). Client-side only. |
+| **Better Auth** | Auth layer. Email/password authentication via Drizzle adapter. |
+| **Server function** | TanStack Start `createServerFn` — type-safe RPC, called from router or client. |
+| **Application Component** | Project-wide reusable UI composition built from shadcn/ui primitives and TanStack libraries. |
+| **Application Data Table** | Application Component for resource lists. Renders server-backed table/card views from feature-owned data, URL state, and filters. |
+| **Asset** | Uploaded media or document owned by a business entity. |
+| **Asset Usage** | Business intent of an Asset: `logo`, `profile`, `gallery`, or `attachment`. |
+| **Asset Variant** | A delivery form of an Asset (`preview`, `full`, `original`) selected based on use. |
 
 ## Architecture
 
 ```
 src/
-├── db/              # Drizzle schema (user, session, account, verification)
-├── features/        # Feature modules (auth, admin) — server functions + types + stores
-│   ├── auth/        # AuthForm component, sign-in/sign-up
-│   └── admin/       # Admin model (types, seed data, server fn, store, collection)
-├── routes/          # File-based TanStack Router routes
-│   ├── index.tsx        # /
-│   ├── sign-in.tsx      # /sign-in
-│   ├── sign-up.tsx      # /sign-up
-│   ├── admin.tsx        # /admin layout
-│   └── admin/           # /admin/users, /admin/system
+├── db/              # Drizzle schema (auth + assets tables)
+├── features/        # domain modules (auth, assets)
+├── routes/
+│   ├── __root.tsx        root layout
+│   ├── sign-in.tsx       /sign-in
+│   ├── sign-up.tsx       /sign-up
+│   ├── _protected.tsx    pathless layout — session guard
+│   └── _protected/       authenticated routes (dashboard, etc.)
 ├── components/      # Shared UI (shadcn/ui wrappers)
-├── integrations/    # TanStack Query provider wiring
-├── lib/             # Auth client, i18n utils
-└── messages/        # next-intl translation files
+├── lib/             # Auth client, i18n, logger, R2 storage
+└── messages/        # use-intl translation files (en/id)
 ```
 
 ## Key decisions
 
-- **Seed data over empty state**: The admin dashboard renders static seed data (`adminSummary`) so the UI works without database credentials.
-- **Local-only TanStack DB**: Operational signals (admin actions) live in client-side collections. Server sync is a future extension.
-- **Billing-ready, not billing-active**: `subscriptions` table structure exists in the planned schema but no payment processor is integrated.
-- **i18n from day one**: All user-facing strings use `use-intl` / `next-intl`. Translation files in `src/messages/`.
-- **shadcn/ui components only**: No emoji or icon libraries outside lucide-react (which shadcn ships).
-
-## Boundaries
-
-| Boundary | Tech |
-|---|---|
-| Data fetching | TanStack Query → TanStack Start server functions |
-| Client state | TanStack Store (UI prefs) + TanStack DB (operational data) |
-| Persistence | Neon Postgres via Drizzle (server), local-only DB collections (client) |
-| Auth | Better Auth with Drizzle adapter, cookie-based sessions |
-| Routing | TanStack Router, file-based, SSR query integration |
-| Forms | TanStack Form (auth forms, forecast planning) |
-| Monitoring | Sentry via `@sentry/tanstack-start` |
-| Styling | Tailwind CSS v4 + shadcn/ui |
+- **Email/password auth only**: Better Auth with Drizzle adapter. No organization plugin, no RBAC.
+- **No tenant model**: Add your own (org, workspace, etc.) via `orgId` columns when needed.
+- **i18n from day one**: All user-facing strings use `use-intl` / `next-intl`.
+- **shadcn/ui only**: No emoji or icon libraries outside lucide-react.
+- **File upload system**: R2-based asset upload with signed URLs, variants, and usage limits.
+- **Asset types are agnostic**: `ownerType` and `usage` are strings — define your own conventions.
 
 ## Current state
 
-The app runs with static seed data. Database tables are defined but not yet wired to real Neon queries. Auth flow (sign-in/sign-up) is functional. Admin routes are protected. Next steps: connect real Neon queries, add org membership guards, wire billing tables.
+**Clean boilerplate** with auth (sign-in/sign-up), protected layout, asset upload system, form system, data table, and full shadcn/ui component library. No business features — add your own.

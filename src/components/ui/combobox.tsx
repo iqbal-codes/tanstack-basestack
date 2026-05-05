@@ -58,10 +58,12 @@ function ComboboxInput({
   disabled = false,
   showTrigger = true,
   showClear = false,
+  onValueChange,
   ...props
 }: ComboboxPrimitive.Input.Props & {
   showTrigger?: boolean
   showClear?: boolean
+  onValueChange?: (value: string) => void
 }) {
   return (
     <InputGroup className={cn('w-auto', className)}>

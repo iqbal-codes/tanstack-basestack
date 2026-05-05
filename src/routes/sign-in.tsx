@@ -8,7 +8,7 @@ function sanitizeRedirect(value: unknown) {
     !value.startsWith('/') ||
     value.startsWith('//')
   ) {
-    return '/admin'
+    return undefined
   }
 
   return value
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/sign-in')({
     const session = await getCurrentSession()
 
     if (session) {
-      throw redirect({ to: search.redirect })
+      throw redirect({ to: search.redirect ?? '/' })
     }
   },
   component: SignInRoute,
@@ -31,5 +31,5 @@ export const Route = createFileRoute('/sign-in')({
 function SignInRoute() {
   const search = Route.useSearch()
 
-  return <AuthForm mode="sign-in" redirectTo={search.redirect} />
+  return <AuthForm mode="sign-in" redirectTo={search.redirect ?? '/'} />
 }
